@@ -1,0 +1,4 @@
+SettingName,ExpectedValue,Framework,ControlID
+MinimumPasswordLength,12,NIST800-53,IA-5
+LockoutBadCount,5,NIST800-53,AC-7
+AuditLogonEvents,3,NIST800-53,AU-2
