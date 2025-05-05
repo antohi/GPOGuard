@@ -2,5 +2,5 @@ from ComplianceChecker import ComplianceChecker
 
 cc = ComplianceChecker()
 
-cc.create_NIST800_baseline("../data/compliance_baseline.csv")
+cc.get_settings_and_values("../data/compliance_baseline.csv")
 
