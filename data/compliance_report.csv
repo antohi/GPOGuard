@@ -1,3 +1,4 @@
-MinimumPasswordLength: COMPLIANT
-LockoutBadCount: COMPLIANT
-AuditLogonEvents: COMPLIANT
+settingName,Status
+MinimumPasswordLength,COMPLIANT
+LockoutBadCount,COMPLIANT
+AuditLogonEvents,COMPLIANT

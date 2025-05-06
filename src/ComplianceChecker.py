@@ -15,7 +15,7 @@ class ComplianceChecker:
                     formatted = eachLine.strip().split(",")
                     set_and_val[formatted[0]] = formatted[1]
                 line += 1
-        self.settings_and_values = set_and_val
+        self.bl_settings_and_values = set_and_val
 
     def get_gpo_settings_and_values(self, gpo):
         gpo_set_and_val = {}
@@ -31,8 +31,8 @@ class ComplianceChecker:
     def check_gpo_compliance(self):
         export_results = {}
         for setting in self.gpo_settings_and_values.keys():
-            if setting in self.settings_and_values.keys():
-                if self.settings_and_values[setting] == self.gpo_settings_and_values[setting]:
+            if setting in self.bl_settings_and_values.keys():
+                if self.bl_settings_and_values[setting] == self.gpo_settings_and_values[setting]:
                     export_results[setting] = "COMPLIANT"
                     print(f"{setting}: COMPLIANT")
                 else:
@@ -43,7 +43,8 @@ class ComplianceChecker:
 
     def log_results(self, output_results):
         with open("../data/compliance_report.csv", 'w') as cr:
+            cr.write("SettingName,Status\n")
             for setting in output_results.keys():
-                cr.write(f"{setting}: {output_results[setting]}\n")
+                cr.write(f"{setting},{output_results[setting]}\n")
 
 
