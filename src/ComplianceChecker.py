@@ -1,4 +1,6 @@
 import csv
+from logging import info
+
 
 class ComplianceChecker:
     def __init__(self):
@@ -27,7 +29,7 @@ class ComplianceChecker:
 
 
     def check_gpo_compliance(self):
-        export_results = {}
+        output_results = {}
         for setting, actual in self.gpo_settings_and_values.items():
             if setting in self.bl_settings_and_values:
                 expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
@@ -35,7 +37,9 @@ class ComplianceChecker:
                     status = "COMPLIANT"
                 else:
                     status = "NOT COMPLIANT"
-                export_results[setting] = {
+                output_results[setting] = {
+                    "expected": expected,
+                    "actual": actual,
                     "status": status,
                     "framework": framework,
                     "control_id": cid,
@@ -44,12 +48,14 @@ class ComplianceChecker:
                     "category": category
                 }
                 print(f"{setting}: {status} (Severity: {severity}) | Description: {desc}")
-        return self.log_results(export_results)
+        return self.log_results(output_results)
 
     def log_results(self, output_results):
         with open("../data/compliance_report.csv", 'w') as cr:
-            cr.write("SettingName,Status\n")
-            for setting in output_results.keys():
-                cr.write(f"{setting},{output_results[setting]}\n")
+            cr.write("SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category\n")
+            for setting, info in output_results.items():
+                cr.write(f"{setting},{info['expected']},{info['actual']},{info['status']},{info['framework']},"
+                         f"{info['control_id']},{info['description']},{info['severity']},"
+                         f"{info['category']}")
 
 

@@ -1,4 +1,2 @@
-SettingName,Status
-MinimumPasswordLength,{'status': 'COMPLIANT', 'framework': 'NIST800-53', 'control_id': 'IA-5', 'description': 'Enforce minimum password length to 12 characters', 'severity': 'High', 'category': 'Access Control'}
-LockoutBadCount,{'status': 'COMPLIANT', 'framework': 'NIST800-53', 'control_id': 'AC-7', 'description': 'Lock account after 5 failed attempts', 'severity': 'High', 'category': 'Access Control'}
-AuditLogonEvents,{'status': 'COMPLIANT', 'framework': 'NIST800-53', 'control_id': 'AU-2', 'description': 'Log both success and failure of all logon attempts', 'severity': 'Medium', 'category': 'Audit'}
+SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category
+MinimumPasswordLength,12,12,COMPLIANT,NIST800-53,IA-5,Enforce minimum password length to 12 characters,High,Access ControlLockoutBadCount,5,5,COMPLIANT,NIST800-53,AC-7,Lock account after 5 failed attempts,High,Access ControlAuditLogonEvents,3,3,COMPLIANT,NIST800-53,AU-2,Log both success and failure of all logon attempts,Medium,Audit
