@@ -1,0 +1,3 @@
+MinimumPasswordLength: COMPLIANT
+LockoutBadCount: COMPLIANT
+AuditLogonEvents: COMPLIANT
