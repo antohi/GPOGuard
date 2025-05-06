@@ -56,6 +56,6 @@ class ComplianceChecker:
             for setting, info in output_results.items():
                 cr.write(f"{setting},{info['expected']},{info['actual']},{info['status']},{info['framework']},"
                          f"{info['control_id']},{info['description']},{info['severity']},"
-                         f"{info['category']}")
+                         f"{info['category']}\n")
 
 
