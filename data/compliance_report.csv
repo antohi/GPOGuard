@@ -1,4 +1,4 @@
-settingName,Status
+SettingName,Status
 MinimumPasswordLength,COMPLIANT
 LockoutBadCount,COMPLIANT
 AuditLogonEvents,COMPLIANT

@@ -6,16 +6,14 @@ class ComplianceChecker:
         self.gpo_settings_and_values = {}
 
 
-    def get_settings_and_values(self, baseline_csv):
-        set_and_val = {}
-        line = 0
-        with open(baseline_csv, 'r') as f:
-            for eachLine in f.readlines():
-                if line > 0:
-                    formatted = eachLine.strip().split(",")
-                    set_and_val[formatted[0]] = formatted[1]
-                line += 1
-        self.bl_settings_and_values = set_and_val
+    def get_bl_settings_and_values(self, baseline_csv):
+        with open(baseline_csv, mode='r') as b:
+            reader = csv.DictReader(b)
+            for row in reader:
+                setting = row['SettingName'].strip()
+                expected = row['ExpectedValue'].strip()
+                self.bl_settings_and_values[setting] = expected
+
 
     def get_gpo_settings_and_values(self, gpo):
         gpo_set_and_val = {}
