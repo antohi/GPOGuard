@@ -3,7 +3,7 @@ Unicode=yes
 [System Access]
 MinimumPasswordAge = 1
 MaximumPasswordAge = 42
-MinimumPasswordLength = 7
+MinimumPasswordLength = 12
 PasswordComplexity = 1
 PasswordHistorySize = 24
 LockoutBadCount = 5
