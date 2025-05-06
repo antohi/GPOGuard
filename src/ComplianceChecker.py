@@ -11,8 +11,8 @@ class ComplianceChecker:
             reader = csv.DictReader(b)
             for row in reader:
                 setting = row['SettingName'].strip()
-                expected = row['ExpectedValue'].strip()
-                self.bl_settings_and_values[setting] = expected
+                info = [row['ExpectedValue'].strip(), row['Framework'].strip(), row['ControlID'].strip(), row['Description'].strip(), row['Severity'].strip(), row['Category'].strip()]
+                self.bl_settings_and_values[setting] = info
 
 
     def get_gpo_settings_and_values(self, gpo):
@@ -28,15 +28,22 @@ class ComplianceChecker:
 
     def check_gpo_compliance(self):
         export_results = {}
-        for setting in self.gpo_settings_and_values.keys():
-            if setting in self.bl_settings_and_values.keys():
-                if self.bl_settings_and_values[setting] == self.gpo_settings_and_values[setting]:
-                    export_results[setting] = "COMPLIANT"
-                    print(f"{setting}: COMPLIANT")
+        for setting, actual in self.gpo_settings_and_values.items():
+            if setting in self.bl_settings_and_values:
+                expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
+                if actual == expected:
+                    status = "COMPLIANT"
                 else:
-                    print(f"{setting}: NOT COMPLIANT")
-                    export_results[setting] = "NOT COMPLIANT"
-
+                    status = "NOT COMPLIANT"
+                export_results[setting] = {
+                    "status": status,
+                    "framework": framework,
+                    "control_id": cid,
+                    "description": desc,
+                    "severity": severity,
+                    "category": category
+                }
+                print(f"{setting}: {status} (Severity: {severity}) | Description: {desc}")
         return self.log_results(export_results)
 
     def log_results(self, output_results):
