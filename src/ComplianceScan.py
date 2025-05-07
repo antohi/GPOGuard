@@ -3,7 +3,7 @@ import logging
 from logging import info
 import json
 
-class ComplianceChecker:
+class ComplianceScan:
     def __init__(self): # Global variables used to store baseline and gpo settings and info
         self.bl_settings_and_values = {}
         self.gpo_settings_and_values = {}
@@ -62,7 +62,7 @@ class ComplianceChecker:
                     "category": category
                 }
 
-                print(f"{setting}: {status} (Severity: {severity}) | Description: {desc}")
+                print(f"{setting}: {status}\nSeverity: {severity}\nDescription: {desc}\n---")
                 local_results.append(record)
         self.output_results.extend(local_results)
 
