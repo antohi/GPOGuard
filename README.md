@@ -1,17 +1,43 @@
-# GPOGuard
+# GPOGuard 🛡️
 Python CLI tool for auto GPO compliance checks. Supports custom imported baselines as well pre-made industry specific baselines such as:
 - **Healthcare** (HIPAA 164.312(b) + NIST 800‑53 AU‑2)  
 - **Finance** (PCI‑DSS 8.2.3 + NIST 800‑53 IA‑5)  
 - **Enterprise** (NIST 800‑53)
 
 ## Features
-- Load any CSV baseline mapping GPO settings to expected values, framework, control IDs, descriptions, severity, and category.  
-- Parse a GPO file for settings.  
-- Compare actual vs expected, print pass/fail with severity & description.  
-- Generate a detailed CSV audit report (`compliance_report.csv`)  
+- **Interactive menu** for:
+  - Custom baseline vs. any GPO file  
+  - Healthcare (HIPAA 164.312(b) + NIST 800-53 AU-2)  
+  - Finance (PCI-DSS 8.2.3 + NIST 800-53 IA-5)  
+  - Enterprise (NIST 800-53)  
+- **Multi-framework support** via per-baseline CSVs  
+- **Parsing** of:
+  - Baseline CSV → expected values, control IDs, descriptions, severity, category  
+  - GPO export (`.txt`) → actual policy settings  
+- **Compliance logic** that marks each setting as COMPLIANT / NOT COMPLIANT  
+- **Report generation** to:
+  - `reports/compliance_report.csv`  
+  - `reports/compliance_report.json` 
+- **Error handling** around file I/O (file exceptions won’t crash the tool)  
+- **Baseline tagging** so you know which framework each row came from
 
-## How to Use
-### 1. Clone the repo
-```bash
-git clone https://github.com/yourusername/GPOGuard.git
-cd GPOGuard
+## Screenshots
+### Menu
+![Menu](photos/menu.png)
+
+### Custom GPO Compliance
+![Custom](photos/custom_compliance.png)
+
+### Finance GPO Compliance
+![Fin](photos/custom_to_finance.png)
+![Fin](photos/finance_results.png)
+![Fin](photos/again-finance-nc.png)
+
+### JSON and CSV Reports
+![JSON](photos/compliance_report_json.png)
+![JSON](photos/compliance_report_csv.png)
+
+
+
+
+
