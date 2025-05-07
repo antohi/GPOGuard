@@ -7,6 +7,7 @@ exit = False
 cc = ComplianceScan()
 
 print("===[GPOGuard]===")
+
 while exit == False: # UI Continues until exit is True
     print("\n=[MAIN MENU]=")# Main Menu options
     print("[1] Custom GPO Compliance")

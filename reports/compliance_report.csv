@@ -1,2 +1,10 @@
 Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category
-Test,MinLen,8,8,TEST,ID-1,"Test desc",Low,AccessControl
+Custom,MinimumPasswordLength,12,3,NIST800-53,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
+Custom,LockoutBadCount,5,5,NIST800-53,AC-7,"Lock account after 5 failed attempts",High,Access Control
+Custom,AuditLogonEvents,3,2,NIST800-53,AU-2,"Log both success and failure of all logon attempts",Medium,Audit
+Finance,MinimumPasswordLength,12,12,PCI-DSS 8.2.3,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
+Finance,LockoutBadCount,5,5,NIST800-53,AC-7,"Lock account after 5 failed attempts",High,Access Control
+Finance,AuditLogonEvents,3,3,NIST800-53,AU-2,"Log both successful and failed logon attempts",Medium,Audit
+Finance,MinimumPasswordLength,12,3,PCI-DSS 8.2.3,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
+Finance,LockoutBadCount,5,5,NIST800-53,AC-7,"Lock account after 5 failed attempts",High,Access Control
+Finance,AuditLogonEvents,3,2,NIST800-53,AU-2,"Log both successful and failed logon attempts",Medium,Audit
