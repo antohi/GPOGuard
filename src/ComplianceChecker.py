@@ -1,11 +1,16 @@
 import csv
 from logging import info
-
+import json
 
 class ComplianceChecker:
     def __init__(self): # Global variables used to store baseline and gpo settings and info
         self.bl_settings_and_values = {}
         self.gpo_settings_and_values = {}
+        self.baseline_type = "Custom"
+        self.output_results = []
+
+    def set_baseline_type(self, baseline_type):
+        self.baseline_type = baseline_type
 
     # Retrieves settings and information from baseline file
     def get_bl_settings_and_values(self, baseline_csv):
@@ -29,7 +34,7 @@ class ComplianceChecker:
 
     # Checks compliance between baseline and gpo files
     def check_gpo_compliance(self):
-        output_results = {}
+        local_results = []
         for setting, actual in self.gpo_settings_and_values.items():
             if setting in self.bl_settings_and_values:
                 expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
@@ -37,7 +42,9 @@ class ComplianceChecker:
                     status = "COMPLIANT"
                 else:
                     status = "NOT COMPLIANT"
-                output_results[setting] = {
+                record = {
+                    "baseline": self.baseline_type,
+                    "setting": setting,
                     "expected": expected,
                     "actual": actual,
                     "status": status,
@@ -47,16 +54,30 @@ class ComplianceChecker:
                     "severity": severity,
                     "category": category
                 }
+
                 print(f"{setting}: {status} (Severity: {severity}) | Description: {desc}")
-        return self.log_results(output_results)
+                local_results.append(record)
+        self.output_results.extend(local_results)
 
     # Logs compliance check results to csv doc
-    def log_results(self, output_results):
-        with open("../data/compliance_report.csv", 'w') as cr:
-            cr.write("SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category\n")
-            for setting, info in output_results.items():
-                cr.write(f"{setting},{info['expected']},{info['actual']},{info['status']},{info['framework']},"
-                         f"{info['control_id']},{info['description']},{info['severity']},"
-                         f"{info['category']}\n")
+    def log_results(self):
+        csv_path = "../reports/compliance_report.csv"
+        json_path = "../reports/compliance_report.json"
+
+        # CSV
+        with open(csv_path, 'w') as f:
+            f.write(
+                "Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category\n")
+            for rec in self.output_results:
+                f.write(
+                    f"{rec['baseline']},{rec['setting']},"
+                    f"{rec['expected']},{rec['actual']},"
+                    f"{rec['framework']},{rec['control_id']},"
+                    f"\"{rec['description']}\",{rec['severity']},{rec['category']}\n"
+                )
+
+        # JSON
+        with open(json_path, 'w') as f:
+            json.dump(self.output_results, f, indent=2)
 
 

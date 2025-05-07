@@ -35,9 +35,12 @@ while exit == False: # UI Continues until exit is True
             print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
             cc.check_gpo_compliance()
             print("\n[MENU]") # Post-menu where user can break loop or scan another doc for compliance
-            print("[1] Check another file for compliance")
-            print("[2] Main Menu")
+            print("[1] Check another file for compliance"
+                  "\n[2] Main Menu"
+                  "\n[3] Exit")
             post_result_choice = input("> ")
+        if post_result_choice == "3":
+            break
     elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
         post_result_choice = "1"
         while post_result_choice == "1":
@@ -47,16 +50,19 @@ while exit == False: # UI Continues until exit is True
                   "\n\nFiles in /data directory:")
             print(list("../data"))  # Prints files in directory using list function
             gpo_file = input("> ")
-
+            cc.set_baseline_type("Healthcare")
             cc.get_bl_settings_and_values(f"../data/healthcare_baseline.csv")
             cc.get_gpo_settings_and_values(f"../data/{gpo_file}")
 
             print("\n[HEALTHCARE GPO COMPLIANCE RESULTS]")
             cc.check_gpo_compliance()
             print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-            print("[1] Check another file for compliance")
-            print("[2] Main Menu")
+            print("[1] Check another file for compliance"
+                  "\n[2] Main Menu"
+                  "\n[3] Exit")
             post_result_choice = input("> ")
+        if post_result_choice == "3":
+            break
     elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
         post_result_choice = "1"
         while post_result_choice == "1":
@@ -66,16 +72,19 @@ while exit == False: # UI Continues until exit is True
                   "\n\nFiles in /data directory:")
             print(list("../data"))  # Prints files in directory using list function
             gpo_file = input("> ")
-
+            cc.set_baseline_type("Finance")
             cc.get_bl_settings_and_values(f"../data/finance_baseline.csv")
             cc.get_gpo_settings_and_values(f"../data/{gpo_file}")
 
             print("\n[FINANCE GPO COMPLIANCE RESULTS]")
             cc.check_gpo_compliance()
             print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-            print("[1] Check another file for compliance")
-            print("[2] Main Menu")
+            print("[1] Check another file for compliance"
+                  "\n[2] Main Menu"
+                  "\n[3] Exit")
             post_result_choice = input("> ")
+        if post_result_choice == "3":
+            break
     elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
         post_result_choice = "1"
         while post_result_choice == "1":
@@ -86,17 +95,20 @@ while exit == False: # UI Continues until exit is True
             print(list("../data"))  # Prints files in directory using list function
             gpo_file = input("> ")
 
+            cc.set_baseline_type("Enterprise")
             cc.get_bl_settings_and_values(f"../data/enterprise_baseline.csv")
             cc.get_gpo_settings_and_values(f"../data/{gpo_file}")
 
             print("\n[ENTERPRISE GPO COMPLIANCE RESULTS]")
             cc.check_gpo_compliance()
             print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-            print("[1] Check another file for compliance")
-            print("[2] Main Menu")
+            print("[1] Check another file for compliance"
+                  "\n[2] Main Menu"
+                  "\n[3] Exit")
             post_result_choice = input("> ")
-
-
+        if post_result_choice == "3":
+            break
     else: # If menu option is invalid
         print("[!] INVALID MENU OPTION\n")
 
+cc.log_results() # Logs results after all scans are finished
