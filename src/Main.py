@@ -38,7 +38,7 @@ while exit == False: # UI Continues until exit is True
             print("[1] Check another file for compliance")
             print("[2] Main Menu")
             post_result_choice = input("> ")
-    if choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
+    elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
         post_result_choice = "1"
         while post_result_choice == "1":
             print("\n=[Healthcare GPO Compliance]=")
@@ -57,6 +57,45 @@ while exit == False: # UI Continues until exit is True
             print("[1] Check another file for compliance")
             print("[2] Main Menu")
             post_result_choice = input("> ")
+    elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
+        post_result_choice = "1"
+        while post_result_choice == "1":
+            print("\n=[Finance GPO Compliance]=")
+            print("[FILE SELECTION]")
+            print("Please select a GPO file to check for compliance (/data directory)"
+                  "\n\nFiles in /data directory:")
+            print(list("../data"))  # Prints files in directory using list function
+            gpo_file = input("> ")
+
+            cc.get_bl_settings_and_values(f"../data/finance_baseline.csv")
+            cc.get_gpo_settings_and_values(f"../data/{gpo_file}")
+
+            print("\n[FINANCE GPO COMPLIANCE RESULTS]")
+            cc.check_gpo_compliance()
+            print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
+            print("[1] Check another file for compliance")
+            print("[2] Main Menu")
+            post_result_choice = input("> ")
+    elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
+        post_result_choice = "1"
+        while post_result_choice == "1":
+            print("\n=[Enterprise GPO Compliance]=")
+            print("[FILE SELECTION]")
+            print("Please select a GPO file to check for compliance (/data directory)"
+                  "\n\nFiles in /data directory:")
+            print(list("../data"))  # Prints files in directory using list function
+            gpo_file = input("> ")
+
+            cc.get_bl_settings_and_values(f"../data/enterprise_baseline.csv")
+            cc.get_gpo_settings_and_values(f"../data/{gpo_file}")
+
+            print("\n[ENTERPRISE GPO COMPLIANCE RESULTS]")
+            cc.check_gpo_compliance()
+            print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
+            print("[1] Check another file for compliance")
+            print("[2] Main Menu")
+            post_result_choice = input("> ")
+
 
     else: # If menu option is invalid
         print("[!] INVALID MENU OPTION\n")
