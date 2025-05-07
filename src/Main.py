@@ -36,6 +36,6 @@ while exit == False: # UI Continues until exit is True
             print("[2] Main Menu")
             post_result_choice = input("> ")
 
-    else:
+    else: # If menu option is invalid
         print("[!] INVALID MENU OPTION\n")
 

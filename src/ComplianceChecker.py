@@ -50,6 +50,7 @@ class ComplianceChecker:
                 print(f"{setting}: {status} (Severity: {severity}) | Description: {desc}")
         return self.log_results(output_results)
 
+    # Logs compliance check results to csv doc
     def log_results(self, output_results):
         with open("../data/compliance_report.csv", 'w') as cr:
             cr.write("SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category\n")
