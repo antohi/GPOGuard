@@ -1,4 +1,2 @@
 SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category
-MinimumPasswordLength,12,12,COMPLIANT,NIST800-53,IA-5,Enforce minimum password length to 12 characters,High,Access Control
-LockoutBadCount,5,5,COMPLIANT,NIST800-53,AC-7,Lock account after 5 failed attempts,High,Access Control
-AuditLogonEvents,3,3,COMPLIANT,NIST800-53,AU-2,Log both success and failure of all logon attempts,Medium,Audit
+AuditLogonEvents,3,3,COMPLIANT,HIPAA 164.312(b),AU-2,Log all authentication attempts,High,Audit
