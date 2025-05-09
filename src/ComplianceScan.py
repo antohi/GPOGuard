@@ -115,6 +115,11 @@ class ComplianceScan:
     def get_control_filter(self):
         return self.control_filter
 
+    # Resets control filter
+    def reset_filter(self):
+        self.control_filter_status = False
+        self.control_filter = None
+
 
 
 

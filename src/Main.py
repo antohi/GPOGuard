@@ -13,6 +13,13 @@ def gpo_file_selection():
     gpo_file = input("> ")
     return gpo_file # Returns user chosen gpo file
 
+def control_filter(cc):
+    # Checks if user would like to use a control filter
+    control_filter = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
+    if control_filter != "":  # If user entered
+        cc.set_control_filter_status(True)
+        cc.set_control_filter(control_filter)
+
 def run_ui(cc):
     print("===[GPOGuard]===")
     while True:  # UI Continues until exit is True
@@ -34,16 +41,11 @@ def run_ui(cc):
                 baseline_file = input("> ")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/{baseline_file}")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-
-                # Checks if user would like to use a control filter
-                control_filter = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
-                if control_filter != "": # If user entered
-                    cc.set_control_filter_status(True)
-                    cc.set_control_filter(control_filter)
-
+                control_filter(cc)
                 print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.reset_filter()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
@@ -59,10 +61,11 @@ def run_ui(cc):
                 cc.set_baseline_type("Healthcare")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/healthcare_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-
+                control_filter(cc)
                 print("\n[HEALTHCARE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.reset_filter()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
@@ -78,10 +81,11 @@ def run_ui(cc):
                 cc.set_baseline_type("Finance")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/finance_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-
+                control_filter(cc)
                 print("\n[FINANCE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.reset_filter()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
@@ -98,10 +102,11 @@ def run_ui(cc):
                 cc.set_baseline_type("Enterprise")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/enterprise_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-
+                control_filter(cc)
                 print("\n[ENTERPRISE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.reset_filter()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
