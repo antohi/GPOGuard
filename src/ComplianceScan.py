@@ -42,13 +42,13 @@ class ComplianceScan:
             print(f"[!] ERROR: Unable to read GPO file. Exception: {e}")
 
     # Checks compliance between baseline and gpo files
-    def check_gpo_compliance(self, control_filter):
+    def check_gpo_compliance(self):
         local_results = []
         for setting, actual in self.gpo_settings_and_values.items():
             if setting in self.bl_settings_and_values:
                 expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
                 if self.get_control_filter_status() == True:
-                    if category != self.get_control_filter():
+                    if cid != self.get_control_filter():
                         continue
                 if actual == expected:
                     status = "COMPLIANT"
