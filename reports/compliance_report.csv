@@ -1,2 +1,4 @@
 Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category
-Custom,MinimumPasswordLength,12,12,PCI-DSS 8.2.3,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
+Finance,MinimumPasswordLength,12,12,PCI-DSS 8.2.3,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
+Finance,AuditLogonEvents,3,3,NIST800-53,AU-2,"Log both successful and failed logon attempts",Medium,Audit
+Finance,MinimumPasswordLength,12,12,PCI-DSS 8.2.3,IA-5,"Enforce minimum password length to 12 characters",High,Access Control
