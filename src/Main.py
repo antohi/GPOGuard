@@ -13,7 +13,6 @@ def gpo_file_selection():
     gpo_file = input("> ")
     return gpo_file # Returns user chosen gpo file
 
-
 def run_ui(cc):
     print("===[GPOGuard]===")
     while True:  # UI Continues until exit is True
@@ -35,6 +34,12 @@ def run_ui(cc):
                 baseline_file = input("> ")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/{baseline_file}")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
+
+                # Checks if user would like to use a control filter
+                control_filter = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
+                if control_filter != "": # If user entered
+                    cc.set_control_filter_status(True)
+                    cc.set_control_filter(control_filter)
 
                 print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
                 print("---")
