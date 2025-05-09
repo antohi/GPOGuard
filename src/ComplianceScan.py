@@ -9,6 +9,8 @@ class ComplianceScan:
         self.gpo_settings_and_values = {}
         self.baseline_type = "Custom"
         self.output_results = []
+        self.control_filter = None
+        self.control_filter_status = False
 
     def set_baseline_type(self, baseline_type):
         self.baseline_type = baseline_type
@@ -40,11 +42,14 @@ class ComplianceScan:
             print(f"[!] ERROR: Unable to read GPO file. Exception: {e}")
 
     # Checks compliance between baseline and gpo files
-    def check_gpo_compliance(self):
+    def check_gpo_compliance(self, control_filter):
         local_results = []
         for setting, actual in self.gpo_settings_and_values.items():
             if setting in self.bl_settings_and_values:
                 expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
+                if self.get_control_filter_status() == True:
+                    if category != self.get_control_filter():
+                        continue
                 if actual == expected:
                     status = "COMPLIANT"
                 else:
@@ -93,5 +98,24 @@ class ComplianceScan:
         except Exception as e:
             print(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
             logging.error(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
+
+    # Sets self.control_filter_status class variable to True
+    def set_control_filter_status(self, status):
+        self.control_filter_status = status
+
+    # Sets self.control_filter to the control to be filtered by
+    def set_control_filter(self, control_filter):
+        self.control_filter = control_filter
+
+    # Returns boolean self.control_filter_status
+    def get_control_filter_status(self):
+        return self.control_filter_status
+
+    # Returns what the control filter is in self.control_filter
+    def get_control_filter(self):
+        return self.control_filter
+
+
+
 
 

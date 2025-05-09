@@ -5,7 +5,7 @@ from ComplianceScan import ComplianceScan
 def list_files(folder):
     return [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
-def run_interactive(cc):
+def run_ui(cc):
     print("===[GPOGuard]===")
     while True:  # UI Continues until exit is True
         print("\n=[MAIN MENU]=")  # Main Menu options
