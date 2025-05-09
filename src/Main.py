@@ -5,6 +5,15 @@ from ComplianceScan import ComplianceScan
 def list_files(folder):
     return [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
+def gpo_file_selection():
+    print("[FILE SELECTION]")
+    print("Please select a GPO file to check for compliance (/data directory)"
+          "\n\nFiles in /data/gpo_files directory:")
+    print(list_files("../data/gpo_files"))  # Prints files in directory using list function
+    gpo_file = input("> ")
+    return gpo_file # Returns user chosen gpo file
+
+
 def run_ui(cc):
     print("===[GPOGuard]===")
     while True:  # UI Continues until exit is True
@@ -19,12 +28,7 @@ def run_ui(cc):
             post_result_choice = "1"  # Users can keep scanning for compliance until 2 is entered in post menu
             while post_result_choice == "1":
                 print("\n=[Custom GPO Compliance Checker]=")
-                print("[FILE SELECTION]")
-                print("Please select a GPO file to check for compliance (/data directory)"
-                      "\n\nFiles in /data directory:")
-                print(list_files("../data/gpo_files"))  # Prints files in directory using list function
-                gpo_file = input("> ")
-
+                gpo_file = gpo_file_selection()
                 print("\nPlease select a compliance baseline (/data directory)"
                       "\nFiles in /data directory:")
                 print(list_files("../data/baseline_files"))  # Prints files in data directory using list function
@@ -46,11 +50,7 @@ def run_ui(cc):
             post_result_choice = "1"
             while post_result_choice == "1":
                 print("\n=[Healthcare GPO Compliance]=")
-                print("[FILE SELECTION]")
-                print("Please select a GPO file to check for compliance (/data directory)"
-                      "\n\nFiles in /data directory:")
-                print(list_files("../data/gpo_files"))  # Prints files in directory using list function
-                gpo_file = input("> ")
+                gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Healthcare")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/healthcare_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
@@ -69,11 +69,7 @@ def run_ui(cc):
             post_result_choice = "1"
             while post_result_choice == "1":
                 print("\n=[Finance GPO Compliance]=")
-                print("[FILE SELECTION]")
-                print("Please select a GPO file to check for compliance (/data directory)"
-                      "\n\nFiles in /data directory:")
-                print(list_files("../data/gpo_files"))  # Prints files in directory using list function
-                gpo_file = input("> ")
+                gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Finance")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/finance_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
@@ -93,11 +89,7 @@ def run_ui(cc):
             while post_result_choice == "1":
                 print("\n=[Enterprise GPO Compliance]=")
                 print("[FILE SELECTION]")
-                print("Please select a GPO file to check for compliance (/data directory)"
-                      "\n\nFiles in /data directory:")
-                print(list_files("../data/gpo_files"))  # Prints files in directory using list function
-                gpo_file = input("> ")
-
+                gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Enterprise")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/enterprise_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
@@ -163,7 +155,7 @@ def main():
     if args.framework and args.gpo:
         run_args_mode(cc, args)
     else:
-        run_interactive(cc)
+        run_ui(cc)
 
 if __name__ == "__main__":
     main()
