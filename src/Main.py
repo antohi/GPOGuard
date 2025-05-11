@@ -48,12 +48,14 @@ def run_ui(cc):
                 print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.get_stats()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
                 cc.reset_filter()
+                cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
         elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
@@ -68,12 +70,14 @@ def run_ui(cc):
                 print("\n[HEALTHCARE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.get_stats()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
                 cc.reset_filter()
+                cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
         elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
@@ -88,12 +92,14 @@ def run_ui(cc):
                 print("\n[FINANCE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.get_stats()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
                 cc.reset_filter()
+                cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
         elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
@@ -109,12 +115,14 @@ def run_ui(cc):
                 print("\n[ENTERPRISE GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
+                cc.get_stats()
                 print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
                 print("[1] Again (same baseline)"
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
                 cc.reset_filter()
+                cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
         elif choice == "5":

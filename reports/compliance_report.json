@@ -1,5 +1,17 @@
 [
   {
+    "baseline": "Healthcare",
+    "setting": "AuditLogonEvents",
+    "expected": "3",
+    "actual": "3",
+    "status": "COMPLIANT",
+    "framework": "HIPAA 164.312(b)",
+    "control_id": "AU-2",
+    "description": "Log all authentication attempts",
+    "severity": "High",
+    "category": "Audit"
+  },
+  {
     "baseline": "Finance",
     "setting": "MinimumPasswordLength",
     "expected": "12",
@@ -24,15 +36,39 @@
     "category": "Audit"
   },
   {
-    "baseline": "Finance",
+    "baseline": "Enterprise",
     "setting": "MinimumPasswordLength",
     "expected": "12",
     "actual": "12",
     "status": "COMPLIANT",
-    "framework": "PCI-DSS 8.2.3",
+    "framework": "NIST800-53",
     "control_id": "IA-5",
     "description": "Enforce minimum password length to 12 characters",
     "severity": "High",
     "category": "Access Control"
+  },
+  {
+    "baseline": "Enterprise",
+    "setting": "LockoutBadCount",
+    "expected": "5",
+    "actual": "5",
+    "status": "COMPLIANT",
+    "framework": "NIST800-53",
+    "control_id": "AC-7",
+    "description": "Lock account after 5 failed login attempts",
+    "severity": "High",
+    "category": "Access Control"
+  },
+  {
+    "baseline": "Enterprise",
+    "setting": "AuditLogonEvents",
+    "expected": "3",
+    "actual": "3",
+    "status": "COMPLIANT",
+    "framework": "NIST800-53",
+    "control_id": "AU-2",
+    "description": "Log both successful and failed logon attempts",
+    "severity": "High",
+    "category": "Audit"
   }
 ]

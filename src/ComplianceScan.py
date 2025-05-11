@@ -12,6 +12,10 @@ class ComplianceScan:
         self.control_filter = None
         self.control_filter_status = False
 
+        self.controls_checked = 0
+        self.controls_compliant = 0
+        self.controls_non_compliant = 0
+
     def set_baseline_type(self, baseline_type):
         self.baseline_type = baseline_type
 
@@ -52,8 +56,10 @@ class ComplianceScan:
                         continue
                 if actual == expected:
                     status = "COMPLIANT"
+                    self.controls_compliant += 1
                 else:
                     status = "NOT COMPLIANT"
+                    self.controls_non_compliant += 1
                 record = {
                     "baseline": self.baseline_type,
                     "setting": setting,
@@ -66,6 +72,7 @@ class ComplianceScan:
                     "severity": severity,
                     "category": category
                 }
+                self.controls_checked += 1
 
                 print(f"{setting}: {status}\nSeverity: {severity}\nDescription: {desc}\n---")
                 local_results.append(record)
@@ -119,6 +126,18 @@ class ComplianceScan:
     def reset_filter(self):
         self.control_filter_status = False
         self.control_filter = None
+
+    # Prints stats of total controls checked, total compliant, and total non-compliant
+    def get_stats(self):
+        print(f"\n[Controls Stats]"
+              f"\nChecked: {self.controls_checked} | Compliant: {self.controls_compliant} | Non-Compliant: {self.controls_non_compliant}")
+
+    # Resets stats back to 0 for next scan
+    def reset_stats(self):
+        self.controls_checked = 0
+        self.controls_compliant = 0
+        self.controls_non_compliant = 0
+
 
 
 
