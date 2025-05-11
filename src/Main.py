@@ -2,6 +2,7 @@ import os
 import argparse
 from ComplianceScan import ComplianceScan
 
+# Lists files in directory
 def list_files(folder):
     return [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
@@ -11,8 +12,14 @@ def gpo_file_selection():
     print("Please select a GPO file to check for compliance (/data directory)"
           "\n\nFiles in /data/gpo_files directory:")
     print(list_files("../data/gpo_files"))  # Prints files in directory using list function
-    gpo_file = input("> ")
-    return gpo_file # Returns user chosen gpo file
+    return input("> ") # Returns user chosen gpo file
+
+# Asks user to select a baseline file to scan GPO file against
+def bl_files_selection():
+    print("\nPlease select a compliance baseline (/data directory)"
+          "\nFiles in /data directory:")
+    print(list_files("../data/baseline_files"))  # Prints files in data directory using list function
+    return input("> ")
 
 # Checks if user would like to use a control filter
 def control_filter(cc):
@@ -20,41 +27,50 @@ def control_filter(cc):
     if control_filter != "":  # If user entered a CF
         cc.apply_control_filter(control_filter)
 
-def run_ui(cc):
-    print("===[GPOGuard]===")
-    exit = False
-    while exit == False:  # UI Continues until exit is True
+# Main menu of app
+def main_menu():
         print("\n=[MAIN MENU]=")  # Main Menu options
         print("[1] Custom GPO Compliance")
         print("[2] Healthcare GPO Compliance (HIPAA 164.312(b) + NIST 800‑53 AU‑2)")
         print("[3] Finance GPO Compliance (PCI‑DSS 8.2.3 + NIST 800‑53 IA‑5)")
         print("[4] Enterprise GPO Compliance (NIST 800-53)")
         print("[5] Exit")
-        choice = input("> ")
+        return input("> ")
 
+# Menu where user can select an option after a scan is completed
+def post_scan_menu():
+    print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
+    print("[1] Again (same baseline)"
+          "\n[2] Main Menu"
+          "\n[3] Exit")
+    return input("> ")
+
+# Resets filters and scan stats
+def post_scan_reset(cc):
+    cc.apply_control_filter()
+    cc.reset_stats()
+
+# Starts UI loop
+def run_ui(cc):
+    print("===[GPOGuard]===")
+    exit = False
+    while exit == False:  # UI Continues until exit is True
+        choice = main_menu()
         if choice == "1":  # Main Menu option #1 Custom GPO Compliance
             post_result_choice = "1"  # Users can keep scanning for compliance until 2 is entered in post menu
             while post_result_choice == "1":
                 print("\n=[Custom GPO Compliance Checker]=")
                 gpo_file = gpo_file_selection()
-                print("\nPlease select a compliance baseline (/data directory)"
-                      "\nFiles in /data directory:")
-                print(list_files("../data/baseline_files"))  # Prints files in data directory using list function
-                baseline_file = input("> ")
-                cc.get_bl_settings_and_values(f"../data/baseline_files/{baseline_file}")
+                bl_file = bl_files_selection()
+                cc.get_bl_settings_and_values(f"../data/baseline_files/{bl_file}")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
                 control_filter(cc)
                 print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
-                print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-                print("[1] Again (same baseline)"
-                      "\n[2] Main Menu"
-                      "\n[3] Exit")
-                post_result_choice = input("> ")
-                cc.apply_control_filter()
-                cc.reset_stats()
+                post_result_choice = post_scan_menu()
+                post_scan_reset(cc)
             if post_result_choice == "3":
                 exit = True
         elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
@@ -70,13 +86,8 @@ def run_ui(cc):
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
-                print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-                print("[1] Again (same baseline)"
-                      "\n[2] Main Menu"
-                      "\n[3] Exit")
-                post_result_choice = input("> ")
-                cc.apply_control_filter()
-                cc.reset_stats()
+                post_result_choice = post_scan_menu()
+                post_scan_reset(cc)
             if post_result_choice == "3":
                 exit = True
         elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
@@ -92,13 +103,8 @@ def run_ui(cc):
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
-                print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-                print("[1] Again (same baseline)"
-                      "\n[2] Main Menu"
-                      "\n[3] Exit")
-                post_result_choice = input("> ")
-                cc.apply_control_filter()
-                cc.reset_stats()
+                post_result_choice = post_scan_menu()
+                post_scan_reset(cc)
             if post_result_choice == "3":
                 exit = True
         elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
@@ -115,13 +121,8 @@ def run_ui(cc):
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
-                print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
-                print("[1] Again (same baseline)"
-                      "\n[2] Main Menu"
-                      "\n[3] Exit")
-                post_result_choice = input("> ")
-                cc.apply_control_filter()
-                cc.reset_stats()
+                post_result_choice = post_scan_menu()
+                post_scan_reset(cc)
             if post_result_choice == "3":
                 exit = True
         elif choice == "5":
