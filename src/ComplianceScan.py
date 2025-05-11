@@ -3,6 +3,7 @@ import logging
 from logging import info
 import json
 from AIRemediation import AIRemediation
+import textwrap
 
 class ComplianceScan:
     def __init__(self): # Global variables used to store baseline and gpo settings and info
@@ -64,7 +65,7 @@ class ComplianceScan:
                 else:
                     status = "NOT COMPLIANT"
                     self.controls_non_compliant += 1
-                    ai_suggestion = self.ai.get_ai_suggestions(cid, desc)
+                    ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
                 record = {
                     "baseline": self.baseline_type,
                     "setting": setting,
@@ -79,9 +80,10 @@ class ComplianceScan:
                 }
                 self.controls_checked += 1
 
-                print(f"{setting}: {status}\nSeverity: {severity}\nDescription: {desc}\n---")
-                if ai_suggestion is not None:
-                    print(f"AI suggestion: {ai_suggestion}")
+                print(f"{setting}: {status}\nSeverity: {severity}\nDescription: {desc}")
+                if ai_suggestion is not None: # If AI suggestion exists, print it
+                    print(f"\nAI Suggestion: {textwrap.fill(ai_suggestion, width=80)}")
+                print("---")
                 local_results.append(record)
         self.output_results.extend(local_results)
 
