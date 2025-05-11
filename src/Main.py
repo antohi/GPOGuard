@@ -10,7 +10,7 @@ def list_files(folder):
 
 # Asks user to select a file to use for their GPO scan
 def gpo_file_selection():
-    print("[FILE SELECTION]")
+    print(f"{Fore.LIGHTWHITE_EX}[FILE SELECTION]{Style.RESET_ALL}")
     print("Please select a GPO file to check for compliance (/data directory)"
           "\n\nFiles in /data/gpo_files directory:")
     print(list_files("../data/gpo_files"))  # Prints files in directory using list function
@@ -31,7 +31,7 @@ def control_filter(cc):
 
 # Main menu of app
 def main_menu():
-        print(f"\n{Fore.YELLOW}=[MAIN MENU]={Style.RESET_ALL}")  # Main Menu options
+        print(f"\n{Fore.CYAN}=[MAIN MENU]={Style.RESET_ALL}")  # Main Menu options
         print("[1] Custom GPO Compliance")
         print("[2] Healthcare GPO Compliance (HIPAA 164.312(b) + NIST 800‑53 AU‑2)")
         print("[3] Finance GPO Compliance (PCI‑DSS 8.2.3 + NIST 800‑53 IA‑5)")
@@ -41,7 +41,7 @@ def main_menu():
 
 # Menu where user can select an option after a scan is completed
 def post_scan_menu():
-    print(f"\n{Fore.LIGHTBLUE_EX}[MENU]{Style.RESET_ALL}")  # Post-menu where user can break loop or scan another doc for compliance
+    print(f"\n{Fore.LIGHTWHITE_EX}[MENU]{Style.RESET_ALL}")  # Post-menu where user can break loop or scan another doc for compliance
     print("[1] Again (same baseline)"
           "\n[2] Main Menu"
           "\n[3] Exit")
@@ -63,13 +63,13 @@ def run_ui(cc):
         if choice == "1":  # Main Menu option #1 Custom GPO Compliance
             post_result_choice = "1"  # Users can keep scanning for compliance until 2 is entered in post menu
             while post_result_choice == "1":
-                print(f"\n{Fore.MAGENTA}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
+                print(f"\n{Fore.YELLOW}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 bl_file = bl_files_selection()
                 cc.get_bl_settings_and_values(f"../data/baseline_files/{bl_file}")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
                 control_filter(cc)
-                print("\n[CUSTOM GPO COMPLIANCE RESULTS]")
+                print(f"\n{Fore.LIGHTYELLOW_EX}[CUSTOM GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
@@ -80,13 +80,13 @@ def run_ui(cc):
         elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
             post_result_choice = "1"
             while post_result_choice == "1":
-                print("\n=[Healthcare GPO Compliance]=")
+                print(f"\n{Fore.YELLOW}=[Healthcare GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Healthcare")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/healthcare_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
                 control_filter(cc)
-                print("\n[HEALTHCARE GPO COMPLIANCE RESULTS]")
+                print(f"\n{Fore.LIGHTYELLOW_EX}[HEALTHCARE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
@@ -97,13 +97,13 @@ def run_ui(cc):
         elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
             post_result_choice = "1"
             while post_result_choice == "1":
-                print("\n=[Finance GPO Compliance]=")
+                print(f"\n{Fore.YELLOW}=[Finance GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Finance")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/finance_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
                 control_filter(cc)
-                print("\n[FINANCE GPO COMPLIANCE RESULTS]")
+                print(f"\n{Fore.LIGHTYELLOW_EX}[FINANCE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()
@@ -114,14 +114,13 @@ def run_ui(cc):
         elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
             post_result_choice = "1"
             while post_result_choice == "1":
-                print("\n=[Enterprise GPO Compliance]=")
-                print("[FILE SELECTION]")
+                print(f"\n{Fore.YELLOW}=[Enterprise GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 cc.set_baseline_type("Enterprise")
                 cc.get_bl_settings_and_values(f"../data/baseline_files/enterprise_baseline.csv")
                 cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
                 control_filter(cc)
-                print("\n[ENTERPRISE GPO COMPLIANCE RESULTS]")
+                print(f"\n{Fore.LIGHTYELLOW_EX}[ENTERPRISE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
                 cc.check_gpo_compliance()
                 cc.get_stats()

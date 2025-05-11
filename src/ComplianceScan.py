@@ -4,6 +4,8 @@ from logging import info
 import json
 from AIRemediation import AIRemediation
 import textwrap
+from colorama import Fore, Style, init
+init(autoreset=True)
 
 class ComplianceScan:
     def __init__(self): # Global variables used to store baseline and gpo settings and info
@@ -47,7 +49,7 @@ class ComplianceScan:
 
             self.gpo_settings_and_values = gpo_set_and_val
         except Exception as e:
-            print(f"[!] ERROR: Unable to read GPO file. Exception: {e}")
+            print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to read GPO file. Exception: {e}")
 
     # Checks compliance between baseline and gpo files
     def check_gpo_compliance(self):
@@ -59,11 +61,11 @@ class ComplianceScan:
                 if self.control_filter_status == True and cid != self.get_control_filter():
                     continue
                 if actual == expected:
-                    status = "COMPLIANT"
+                    status = f"{Fore.GREEN}COMPLIANT{Style.RESET_ALL}"
                     self.controls_compliant += 1
                     ai_suggestion = None
                 else:
-                    status = "NOT COMPLIANT"
+                    status = f"{Fore.RED}NON-COMPLIANT{Style.RESET_ALL}"
                     self.controls_non_compliant += 1
                     ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
                 record = {
@@ -80,9 +82,11 @@ class ComplianceScan:
                 }
                 self.controls_checked += 1
 
-                print(f"{setting}: {status}\nSeverity: {severity}\nDescription: {desc}")
+                print(f"{Fore.LIGHTWHITE_EX}{setting}:{Style.RESET_ALL} {status}"
+                      f"\n{Fore.LIGHTWHITE_EX}Severity:{Style.RESET_ALL} {severity}"
+                      f"\n{Fore.LIGHTWHITE_EX}Description:{Style.RESET_ALL} {desc}")
                 if ai_suggestion is not None: # If AI suggestion exists, print it
-                    print(f"\nAI Suggestion: {textwrap.fill(ai_suggestion, width=80)}")
+                    print(f"\n{Fore.LIGHTMAGENTA_EX}AI Suggestion:{Style.RESET_ALL} {textwrap.fill(ai_suggestion, width=80)}")
                 print("---")
                 local_results.append(record)
         self.output_results.extend(local_results)
@@ -135,8 +139,8 @@ class ComplianceScan:
 
     # Prints stats of total controls checked, total compliant, and total non-compliant
     def get_stats(self):
-        print(f"\n[Controls Stats]"
-              f"\nChecked: {self.controls_checked} | Compliant: {self.controls_compliant} | Non-Compliant: {self.controls_non_compliant}")
+        print(f"{Fore.LIGHTWHITE_EX}\n[Controls Stats]{Style.RESET_ALL}"
+              f"\nChecked: {Fore.LIGHTWHITE_EX}{self.controls_checked}{Style.RESET_ALL} | Compliant: {Fore.GREEN}{self.controls_compliant}{Style.RESET_ALL} | Non-Compliant: {Fore.RED}{self.controls_non_compliant}{Style.RESET_ALL}")
 
     # Resets stats back to 0 for next scan
     def reset_stats(self):
