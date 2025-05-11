@@ -1,29 +1,26 @@
 import os
-from pyexpat.errors import messages
-
-import openai
-
+from openai import OpenAI
 from dotenv import load_dotenv
 
 class AIRemediation:
 
-    def __init__(self):
+    @staticmethod
+    def get_ai_suggestions(control_id, description):
         load_dotenv()
-        self.API_KEY = os.getenv("API_KEY")
-
-    def get_ai_suggestions(self, control_id, description):
-        prompt = (f"You are a cybersecurity compliance expert. Using 2-3 sentences, "
-                  f"what is a GPO-based remediation for the following NIST 800-53 control?"
-                  f"{control_id}: {description}")
-
+        api_key = os.getenv("API_KEY")
         try:
-            response = openai.ChatCompletion.create(
-                model = "gpt.4",
-                messages = [{"role": "user", "content": prompt}],
-                max_tokens = 100,
-                temperature = 0.4
+            client = OpenAI(
+                api_key = api_key,
             )
-            return response['choices'][0]['message']['content'].strip()
+            response = client.responses.create(
+                model = "gpt-4o",
+                instructions = f"You are a cybersecurity compliance expert. Using 2-3 sentences "
+                               f"help the user fix their compliance issue.",
+                input = f"what is a GPO-based remediation for the following NIST 800-53 control? "
+                        f"{control_id}: {description}")
+
+            return response.output_text
+
         except Exception as e:
             print(f"[!] AI ERROR: Could not get suggestion: {e}")
 
