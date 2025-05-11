@@ -17,9 +17,8 @@ def gpo_file_selection():
 # Checks if user would like to use a control filter
 def control_filter(cc):
     control_filter = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
-    if control_filter != "":  # If user entered
-        cc.set_control_filter_status(True)
-        cc.set_control_filter(control_filter)
+    if control_filter != "":  # If user entered a CF
+        cc.apply_control_filter(control_filter)
 
 def run_ui(cc):
     print("===[GPOGuard]===")
@@ -54,7 +53,7 @@ def run_ui(cc):
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
-                cc.reset_filter()
+                cc.apply_control_filter()
                 cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
@@ -76,7 +75,7 @@ def run_ui(cc):
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
-                cc.reset_filter()
+                cc.apply_control_filter()
                 cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
@@ -98,7 +97,7 @@ def run_ui(cc):
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
-                cc.reset_filter()
+                cc.apply_control_filter()
                 cc.reset_stats()
             if post_result_choice == "3":
                 exit = True
@@ -121,7 +120,7 @@ def run_ui(cc):
                       "\n[2] Main Menu"
                       "\n[3] Exit")
                 post_result_choice = input("> ")
-                cc.reset_filter()
+                cc.apply_control_filter()
                 cc.reset_stats()
             if post_result_choice == "3":
                 exit = True

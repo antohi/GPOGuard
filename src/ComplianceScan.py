@@ -51,9 +51,8 @@ class ComplianceScan:
         for setting, actual in self.gpo_settings_and_values.items():
             if setting in self.bl_settings_and_values:
                 expected, framework, cid, desc, severity, category = self.bl_settings_and_values[setting]
-                if self.get_control_filter_status() == True:
-                    if cid != self.get_control_filter():
-                        continue
+                if self.control_filter_status == True and cid != self.get_control_filter():
+                    continue
                 if actual == expected:
                     status = "COMPLIANT"
                     self.controls_compliant += 1
@@ -106,17 +105,14 @@ class ComplianceScan:
             print(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
             logging.error(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
 
-    # Sets self.control_filter_status class variable to True
-    def set_control_filter_status(self, status):
-        self.control_filter_status = status
-
-    # Sets self.control_filter to the control to be filtered by
-    def set_control_filter(self, control_filter):
-        self.control_filter = control_filter
-
-    # Returns boolean self.control_filter_status
-    def get_control_filter_status(self):
-        return self.control_filter_status
+    # Applies control filter, if no control id used, filter is cleared.
+    def apply_control_filter(self, control_id=None):
+        if control_id:
+            self.control_filter = control_id
+            self.control_filter_status = True
+        else:
+            self.control_filter = None
+            self.control_filter_status = False
 
     # Returns what the control filter is in self.control_filter
     def get_control_filter(self):
