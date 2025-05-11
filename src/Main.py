@@ -1,6 +1,8 @@
 import os
 import argparse
 from ComplianceScan import ComplianceScan
+from colorama import Fore, Style, init
+init(autoreset=True)
 
 # Lists files in directory
 def list_files(folder):
@@ -23,13 +25,13 @@ def bl_files_selection():
 
 # Checks if user would like to use a control filter
 def control_filter(cc):
-    control_filter = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
+    cf = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
     if control_filter != "":  # If user entered a CF
-        cc.apply_control_filter(control_filter)
+        cc.apply_control_filter(cf)
 
 # Main menu of app
 def main_menu():
-        print("\n=[MAIN MENU]=")  # Main Menu options
+        print(f"\n{Fore.YELLOW}=[MAIN MENU]={Style.RESET_ALL}")  # Main Menu options
         print("[1] Custom GPO Compliance")
         print("[2] Healthcare GPO Compliance (HIPAA 164.312(b) + NIST 800‑53 AU‑2)")
         print("[3] Finance GPO Compliance (PCI‑DSS 8.2.3 + NIST 800‑53 IA‑5)")
@@ -39,7 +41,7 @@ def main_menu():
 
 # Menu where user can select an option after a scan is completed
 def post_scan_menu():
-    print("\n[MENU]")  # Post-menu where user can break loop or scan another doc for compliance
+    print(f"\n{Fore.LIGHTBLUE_EX}[MENU]{Style.RESET_ALL}")  # Post-menu where user can break loop or scan another doc for compliance
     print("[1] Again (same baseline)"
           "\n[2] Main Menu"
           "\n[3] Exit")
@@ -52,14 +54,16 @@ def post_scan_reset(cc):
 
 # Starts UI loop
 def run_ui(cc):
-    print("===[GPOGuard]===")
+    print(f"{Fore.LIGHTBLUE_EX}----------------"
+          f"\n===[GPOGuard]==="
+          f"\n----------------{Style.RESET_ALL}")
     exit = False
     while exit == False:  # UI Continues until exit is True
         choice = main_menu()
         if choice == "1":  # Main Menu option #1 Custom GPO Compliance
             post_result_choice = "1"  # Users can keep scanning for compliance until 2 is entered in post menu
             while post_result_choice == "1":
-                print("\n=[Custom GPO Compliance Checker]=")
+                print(f"\n{Fore.MAGENTA}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 bl_file = bl_files_selection()
                 cc.get_bl_settings_and_values(f"../data/baseline_files/{bl_file}")
