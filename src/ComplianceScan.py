@@ -81,7 +81,8 @@ class ComplianceScan:
                     "control_id": cid,
                     "description": desc,
                     "severity": severity,
-                    "category": category
+                    "category": category,
+                    "ai_suggestion": ai_suggestion or "N/A"
                 }
 
                 print(f"{Fore.LIGHTWHITE_EX}{setting}:{Style.RESET_ALL} {status}"
@@ -102,13 +103,13 @@ class ComplianceScan:
             # CSV
             with open(csv_path, 'w') as f:
                 f.write(
-                    "Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category\n")
+                    "Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category,AISuggestion\n")
                 for rec in self.output_results:
                     f.write(
                         f"{rec['baseline']},{rec['setting']},"
                         f"{rec['expected']},{rec['actual']},"
                         f"{rec['framework']},{rec['control_id']},"
-                        f"\"{rec['description']}\",{rec['severity']},{rec['category']}\n"
+                        f"\"{rec['description']}\",{rec['severity']},{rec['category']},{rec['ai_suggestion']}\n"
                     )
         except Exception as e:
             print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to write report CSV file. Exception: {e}")
