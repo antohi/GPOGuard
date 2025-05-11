@@ -35,7 +35,7 @@ class ComplianceScan:
                     info = [row['ExpectedValue'].strip(), row['Framework'].strip(), row['ControlID'].strip(), row['Description'].strip(), row['Severity'].strip(), row['Category'].strip()]
                     self.bl_settings_and_values[setting] = info
         except Exception as e:
-            print(f"[!] ERROR: Unable to read baseline file. Exception: {e}")
+            print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to read baseline file. Exception: {e}")
 
     # Retrieves settings and information from GPO file
     def get_gpo_settings_and_values(self, gpo):
@@ -67,7 +67,10 @@ class ComplianceScan:
                 else:
                     status = f"{Fore.RED}NON-COMPLIANT{Style.RESET_ALL}"
                     self.controls_non_compliant += 1
-                    ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
+                    try:
+                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
+                    except Exception as e:
+                        ai_suggestion = f"{Fore.LIGHTWHITE_EX}[!] AI ERROR:{Style.RESET_ALL} AI is unavailable at this time."
                 record = {
                     "baseline": self.baseline_type,
                     "setting": setting,
@@ -80,7 +83,6 @@ class ComplianceScan:
                     "severity": severity,
                     "category": category
                 }
-                self.controls_checked += 1
 
                 print(f"{Fore.LIGHTWHITE_EX}{setting}:{Style.RESET_ALL} {status}"
                       f"\n{Fore.LIGHTWHITE_EX}Severity:{Style.RESET_ALL} {severity}"
@@ -88,6 +90,8 @@ class ComplianceScan:
                 if ai_suggestion is not None: # If AI suggestion exists, print it
                     print(f"\n{Fore.LIGHTMAGENTA_EX}AI Suggestion:{Style.RESET_ALL} {textwrap.fill(ai_suggestion, width=80)}")
                 print("---")
+
+                self.controls_checked += 1
                 local_results.append(record)
         self.output_results.extend(local_results)
 
@@ -107,7 +111,7 @@ class ComplianceScan:
                         f"\"{rec['description']}\",{rec['severity']},{rec['category']}\n"
                     )
         except Exception as e:
-            print(f"[!] ERROR: Unable to write report CSV file. Exception: {e}")
+            print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to write report CSV file. Exception: {e}")
             logging.error(f"[!] ERROR: Unable to write report CSV file. Exception: {e}")
 
         try:
@@ -116,7 +120,7 @@ class ComplianceScan:
             with open(json_path, 'w') as f:
                 json.dump(self.output_results, f, indent=2)
         except Exception as e:
-            print(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
+            print(f"{Fore.LIGHTWHITE_EX}[!] ERROR:{Style.RESET_ALL} Unable to write report JSON file. Exception: {e}")
             logging.error(f"[!] ERROR: Unable to write report JSON file. Exception: {e}")
 
     # Applies control filter, if no control id used, filter is cleared.
@@ -140,7 +144,7 @@ class ComplianceScan:
     # Prints stats of total controls checked, total compliant, and total non-compliant
     def get_stats(self):
         print(f"{Fore.LIGHTWHITE_EX}\n[Controls Stats]{Style.RESET_ALL}"
-              f"\nChecked: {Fore.LIGHTWHITE_EX}{self.controls_checked}{Style.RESET_ALL} | Compliant: {Fore.GREEN}{self.controls_compliant}{Style.RESET_ALL} | Non-Compliant: {Fore.RED}{self.controls_non_compliant}{Style.RESET_ALL}")
+              f"\nChecked: {Fore.WHITE}{self.controls_checked}{Style.RESET_ALL} | Compliant: {Fore.GREEN}{self.controls_compliant}{Style.RESET_ALL} | Non-Compliant: {Fore.RED}{self.controls_non_compliant}{Style.RESET_ALL}")
 
     # Resets stats back to 0 for next scan
     def reset_stats(self):
