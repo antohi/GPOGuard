@@ -59,6 +59,7 @@ class ComplianceScan:
                 else:
                     status = "NOT COMPLIANT"
                     self.controls_non_compliant += 1
+
                 record = {
                     "baseline": self.baseline_type,
                     "setting": setting,
