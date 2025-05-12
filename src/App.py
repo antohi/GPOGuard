@@ -1,11 +1,15 @@
+import json
 import os
 import tempfile
 
 import streamlit as app
 from ComplianceScan import ComplianceScan
+import io
+import pandas as p
 
 cc = ComplianceScan()
 
+# CSS for some styling changes
 app.set_page_config(page_title="GPOGuard", layout="centered")
 app.markdown("""
     <style>
@@ -61,9 +65,36 @@ def run_scan(gpo_path, bf_path):
                 app.write(f":orange[**Actual:**] {rec['actual']}")
                 app.write(f":orange[**Severity:**] {rec['severity']}")
                 app.write(f":blue[**AI Suggestion:**] {rec['ai_suggestion']}")
+        download_csv_json()
     except Exception as e:
         app.error(f"❌ Scan failed: {e}")
 
+# Download option to either a csv or json file at the end of scan
+def download_csv_json():
+    app.markdown("### [EXPORT RESULTS]")
+    df = p.DataFrame(cc.output_results)
+
+    # CSV Download
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    app.download_button(
+        label="⬇️ Export CSV",
+        data=csv_buffer.getvalue(),
+        file_name="gpo_compliance_results.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+    # JSON Download
+    json_buffer = io.StringIO()
+    json.dump(cc.output_results, json_buffer, indent=2)
+    app.download_button(
+        label="⬇️ Export JSON",
+        data=json_buffer.getvalue(),
+        file_name="gpo_compliance_results.json",
+        mime="application/json",
+        use_container_width=True
+    )
 # [GPO Guard] Title
 app.markdown(
     """<h1 style='color:#387ADF; white-space: nowrap; text-align: center;'>[GPO GUARD]</h1>""",
@@ -108,6 +139,7 @@ if app.session_state.scan_mode == "custom":
 
 # Start healthcare logic if healthcare button selected
 elif app.session_state.scan_mode == "healthcare":
+    cc.set_baseline_type("Healthcare")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
@@ -118,6 +150,7 @@ elif app.session_state.scan_mode == "healthcare":
 
 # Start finance logic if finance button selected
 elif app.session_state.scan_mode == "finance":
+    cc.set_baseline_type("Finance")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
@@ -128,6 +161,7 @@ elif app.session_state.scan_mode == "finance":
 
 # Start enterprise logic if enterprise button selected
 elif app.session_state.scan_mode == "enterprise":
+    cc.set_baseline_type("Enterprise")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
