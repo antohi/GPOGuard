@@ -23,15 +23,15 @@ Python CLI tool for auto GPO compliance checks. Supports custom imported baselin
 
 ## Screenshots
 ### Menu
-![Menu](photos/menu.png)
+![Menu](screenshots/menu.png)
 
 ### GPO Compliance
-![Fin](photos/custom_to_finance.png)
-![Fin](photos/again-finance-nc.png)
+![Fin](screenshots/custom_to_finance.png)
+![Fin](screenshots/again-finance-nc.png)
 
 ### JSON and CSV Reports
-![JSON](photos/compliance_report_json.png)
-![JSON](photos/compliance_report_csv.png)
+![JSON](screenshots/compliance_report_json.png)
+![JSON](screenshots/compliance_report_csv.png)
 
 
 

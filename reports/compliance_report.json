@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "baseline": "Finance",
+    "setting": "MinimumPasswordLength",
+    "expected": "12",
+    "actual": "3",
+    "status": "\u001b[31mNON-COMPLIANT\u001b[0m",
+    "framework": "PCI-DSS 8.2.3",
+    "control_id": "IA-5",
+    "description": "Enforce minimum password length to 12 characters",
+    "severity": "High",
+    "category": "Access Control",
+    "ai_suggestion": "To remediate the IA-5 control, you can create a Group Policy Object (GPO) that enforces a minimum password length of 12 characters by navigating to Computer Configuration > Policies > Windows Settings > Security Settings > Account Policies > Password Policy. In the Password Policy settings, set the \"Minimum password length\" to 12 characters to ensure compliance with the NIST 800-53 control. This GPO-based remediation will apply the password length requirement to all computers in the scope of the GPO."
+  }
+]
