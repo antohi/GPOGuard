@@ -1,39 +1,78 @@
-# GPOGuard 🛡️
+# 🔐 GPOGuard – Group Policy Compliance Auditor w/ AI
+
+**GPOGuard** is a tool that audits AD GPO exports against compliance baselines like **HIPAA**, **PCI-DSS**, and **NIST 800-53**. It has both **Streamlit GUI** and a fully functional **Colorama CLI**, making it versatile for enterprise, educational, and personal security projects.
+
+> Built to automate audit workflows and remediation procedures, with GROQ AI-generated recommendations.
+
+---
+
+## 📷 UI Preview
+
+### Web App (Streamlit)
+
+![Streamlit UI](./screenshots/streamlit/menu.png)
+
+### Console UI (Colorama)
+
+
 Python CLI tool for auto GPO compliance checks. Supports custom imported baselines as well pre-made industry specific baselines such as:
 - **Healthcare** (HIPAA 164.312(b) + NIST 800‑53 AU‑2)  
 - **Finance** (PCI‑DSS 8.2.3 + NIST 800‑53 IA‑5)  
 - **Enterprise** (NIST 800‑53)
 
+---
 ## Features
-- **Interactive menu** for:
-  - Custom baseline vs. any GPO file  
-  - Healthcare (HIPAA 164.312(b) + NIST 800-53 AU-2)  
-  - Finance (PCI-DSS 8.2.3 + NIST 800-53 IA-5)  
-  - Enterprise (NIST 800-53)  
-- **Multi-framework support** via per-baseline CSVs  
-- **Parsing** of:
-  - Baseline CSV → expected values, control IDs, descriptions, severity, category  
-  - GPO export (`.txt`) → actual policy settings  
-- **Compliance logic** that marks each setting as COMPLIANT / NOT COMPLIANT  
-- **Report generation** to:
-  - `reports/compliance_report.csv`  
-  - `reports/compliance_report.json` 
-- **Error handling** around file I/O (file exceptions won’t crash the tool)  
-- **Baseline tagging** so you know which framework each row came from
+### Capabilities
+- Custom or prebuilt baseline compliance scans
+- HIPAA + NIST baseline (Healthcare)
+- PCI-DSS + NIST IA-5 baseline (Finance)
+- NIST 800-53 full baseline (Enterprise)
+- AI-generated remediation suggestions
+- File uploads via GUI (GPO & Baseline)
+- Export results to **CSV** and **JSON**
+- Control ID filtering (via CLI)
+- Color-coded terminal UI via **Colorama**
+- UI powered by **Streamlit**
 
+---
+
+## UI Modes
+### 1. Streamlit Web App (GUI)
+- Drag and drop uploads
+- Button-based framework selection
+- Scan results (severity, status, AI suggestions)
+- Export buttons (CSV, JSON)
+- Dark themed
 ## Screenshots
-### Menu
-![Menu](screenshots/menu.png)
-
-### GPO Compliance
-![Fin](screenshots/custom_to_finance.png)
-![Fin](screenshots/again-finance-nc.png)
-
-### JSON and CSV Reports
-![JSON](screenshots/compliance_report_json.png)
-![JSON](screenshots/compliance_report_csv.png)
+![Menu](screenshots/streamlit/menu.png)
+![Custom Scan](screenshots/streamlit/cfp.png)
+![Scan Results](screenshots/streamlit/sr.png)
+![Scan Results More Info](screenshots/streamlit/sr_mi.png)
+![Exports](screenshots/streamlit/exp.png)
 
 
 
 
+### 2. Console UI
+- Colorama-powered CLI interface
+- Interactive menu options
+- Live scanning feedback
+- Optional Control ID filtering
+- Logs results to CSV and JSON
+## Screenshots
+![Menu](screenshots/cml/menu.png)
+![File Selection](screenshots/cml/file_selection.png)
+![Custom Results](screenshots/cml/custom_results.png)
+![AI and Filter](screenshots/cml/ai&filter.png)
+
+
+
+
+---
+
+## Requirements
+```pip install -r requirements.txt```
+
+## AI Integration 
+The ```AIRemediation.py``` module supports contextual, control-specific fix suggestions. If you configure an API key, GPOGuard can generate automated remediation advice.
 
