@@ -46,8 +46,7 @@ class ComplianceScan:
                     if " = " in eachLine:
                         formatted = eachLine.strip().split(" = ")
                         gpo_set_and_val[formatted[0]] = formatted[1]
-
-            self.gpo_settings_and_values = gpo_set_and_val
+                        self.gpo_settings_and_values = gpo_set_and_val
         except Exception as e:
             print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to read GPO file. Exception: {e}")
 
