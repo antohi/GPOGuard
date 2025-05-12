@@ -1,3 +1,4 @@
+import os
 import tempfile
 
 import streamlit as app
@@ -43,8 +44,27 @@ app.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# [GPO Guard] Title
+# Calls proper ComplianceScan class methods to run logic, displays results
+def run_scan(gpo_path, bf_path):
+    try:
+        cc.get_gpo_settings_and_values(gpo_path)
+        cc.get_bl_settings_and_values(bf_path)
+        cc.check_gpo_compliance(ui_mode=True)
+        cc.get_stats()
 
+        app.markdown("### [SCAN RESULTS]")
+        for rec in cc.output_results:
+            status = f":green[{rec['status']}]" if rec['status'] == "COMPLIANT" else f":red[{rec['status']}]"
+            app.markdown(f"**{rec['setting']}** - {status}")
+            with app.expander("More Information"):
+                app.write(f":orange[**Expected:**] {rec['expected']}")
+                app.write(f":orange[**Actual:**] {rec['actual']}")
+                app.write(f":orange[**Severity:**] {rec['severity']}")
+                app.write(f":blue[**AI Suggestion:**] {rec['ai_suggestion']}")
+    except Exception as e:
+        app.error(f"❌ Scan failed: {e}")
+
+# [GPO Guard] Title
 app.markdown(
     """<h1 style='color:#387ADF; white-space: nowrap; text-align: center;'>[GPO GUARD]</h1>""",
     unsafe_allow_html=True
@@ -53,54 +73,44 @@ app.markdown(
 # Scan selection heading
 app.markdown("### [SCAN SELECTION]")
 
+if "scan_mode" not in app.session_state:
+    app.session_state.scan_mode = None
 
 # Custom scan w/ GPO and baseline exports uploads
-custom = app.button("🔍Custom Scan", use_container_width=True)
-if "custom_scan" not in app.session_state:
-    app.session_state.custom_scan = False
-
-if custom:
-    app.session_state.custom_scan = True
+if app.button("🔍Custom Scan", use_container_width=True):
+    app.session_state.scan_mode = "custom"
 
 # Preset industry layouts laid evenly
 col7, col8, col9, col10,col11 = app.columns(5)
 with col7:
-    app.button("💉 Healthcare (HIPAA)")
+    if app.button("💉 Healthcare (HIPAA)"):
+        app.session_state.scan_mode = "healthcare"
 with col9:
-    app.button("💸 Finance (PCI-DSS)")
+    if app.button("💸 Finance (PCI-DSS)"):
+        app.session_state.scan_mode = "finance"
 with col11:
-    app.button("💼 Enterprise (NIST)")
+    if app.button("💼 Enterprise (NIST)"):
+        app.session_state.scan_mode = "enterprise"
 
-if app.session_state.custom_scan:
-    # Baseline and GPO uploads
+if app.session_state.scan_mode == "custom":
     app.markdown("### [FILE UPLOAD]")
     baseline_file = app.file_uploader("Upload Baseline CSV", type=["csv"])
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    if gpo_file and baseline_file and app.button("[SCAN]", use_container_width=True):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as bf_temp:
+            bf_temp.write(baseline_file.read())
+            bf_path = bf_temp.name
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
+            gpo_temp.write(gpo_file.read())
+            gpo_path = gpo_temp.name
+        run_scan(gpo_path, bf_path)
 
-    scan = app.button("[SCAN]", use_container_width=True)
-    if gpo_file and baseline_file:
-        if scan:
-            with tempfile.NamedTemporaryFile(delete=False, suffix="csv") as bf_temp:
-                bf_temp.write(baseline_file.read())
-                bf_path = bf_temp.name
-
-            with tempfile.NamedTemporaryFile(delete=False, suffix="txt") as gpo_temp:
-                gpo_temp.write(gpo_file.read())
-                gpo_path = gpo_temp.name
-            try:
-                cc.get_gpo_settings_and_values(gpo_path)
-                cc.get_bl_settings_and_values(bf_path)
-                cc.check_gpo_compliance(ui_mode=True)
-                cc.get_stats()
-
-                app.markdown("### [SCAN RESULTS]")
-                for rec in cc.output_results:
-                    status = f":green[{rec['status']}]" if rec['status'] == "COMPLIANT" else f":red[{rec['status']}]"
-                    app.markdown(f"**{rec['setting']}** - {status}")
-                    with app.expander("More Information"):
-                        app.write(f":orange[**Expected:**] {rec['expected']}")
-                        app.write(f":orange[**Actual:**] {rec['actual']}")
-                        app.write(f":orange[**Severity:**] {rec['severity']}")
-                        app.write(f":blue[**AI Suggestion:**] {rec['ai_suggestion']}")
-            except Exception as e:
-                app.error(f"❌ Scan failed: {e}")
+elif app.session_state.scan_mode == "healthcare":
+    app.markdown("### [FILE UPLOAD]")
+    gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    bl_file = "/data/baseline_files/healthcare_baseline.csv"
+    if gpo_file and app.button("[SCAN]", use_container_width=True):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
+            gpo_temp.write(gpo_file.read())
+            gpo_path = gpo_temp.name
+        run_scan(gpo_path, "../data/baseline_files/healthcare_baseline.csv")

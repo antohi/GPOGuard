@@ -67,7 +67,7 @@ class ComplianceScan:
                     status = f"{Fore.RED}NON-COMPLIANT{Style.RESET_ALL}" if not ui_mode else "NON-COMPLIANT"
                     self.controls_non_compliant += 1
                     try:
-                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
+                        ai_suggestion = "N/A"# self.ai.get_ai_suggestions(cid, desc) If not compliant, get AI suggestion
                     except Exception as e:
                         ai_suggestion = f"{Fore.LIGHTWHITE_EX}[!] AI ERROR:{Style.RESET_ALL} AI is unavailable at this time."
                 record = {
