@@ -13,7 +13,7 @@ cc = ComplianceScan()
 app.set_page_config(page_title="GPOGuard", layout="centered")
 app.markdown("""
     <style>
-        
+
         /* Change all markdown header colors */
         h3, h4, h5, h6 {
             color: #df9d38 !important;
@@ -38,7 +38,7 @@ app.markdown("""
             border: 2px solid #2C74B3 !important;  /* Optional: Hover border */
 
         }
-        
+
 
 
         /* Adjust layout background (optional) */
@@ -47,6 +47,7 @@ app.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Calls proper ComplianceScan class methods to run logic, displays results
 def run_scan(gpo_path, bf_path):
@@ -69,9 +70,10 @@ def run_scan(gpo_path, bf_path):
     except Exception as e:
         app.error(f"❌ Scan failed: {e}")
 
+
 # Download option to either a csv or json file at the end of scan
 def download_csv_json():
-    app.markdown("### [EXPORT RESULTS]")
+    app.markdown("### [EXPORTS]")
     df = p.DataFrame(cc.output_results)
 
     # CSV Download
@@ -95,6 +97,8 @@ def download_csv_json():
         mime="application/json",
         use_container_width=True
     )
+
+
 # [GPO Guard] Title
 app.markdown(
     """<h1 style='color:#387ADF; white-space: nowrap; text-align: center;'>[GPO GUARD]</h1>""",
@@ -112,7 +116,7 @@ if app.button("🔍Custom Scan", use_container_width=True):
     app.session_state.scan_mode = "custom"
 
 # Preset industry layouts laid evenly
-col7, col8, col9, col10,col11 = app.columns(5)
+col7, col8, col9, col10, col11 = app.columns(5)
 with col7:
     if app.button("💉 Healthcare (HIPAA)"):
         app.session_state.scan_mode = "healthcare"
