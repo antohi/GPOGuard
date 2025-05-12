@@ -97,10 +97,10 @@ if app.session_state.custom_scan:
                 for rec in cc.output_results:
                     status = f":green[{rec['status']}]" if rec['status'] == "COMPLIANT" else f":red[{rec['status']}]"
                     app.markdown(f"**{rec['setting']}** - {status}")
-                    with app.expander("Details"):
-                        app.write(f"**Expected:** {rec['expected']}")
-                        app.write(f"**Actual:** {rec['actual']}")
-                        app.write(f"**Severity:** {rec['severity']}")
-                        app.write(f"**AI Suggestion:** {rec['ai_suggestion']}")
+                    with app.expander("More Information"):
+                        app.write(f":orange[**Expected:**] {rec['expected']}")
+                        app.write(f":orange[**Actual:**] {rec['actual']}")
+                        app.write(f":orange[**Severity:**] {rec['severity']}")
+                        app.write(f":blue[**AI Suggestion:**] {rec['ai_suggestion']}")
             except Exception as e:
                 app.error(f"❌ Scan failed: {e}")
