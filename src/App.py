@@ -92,6 +92,7 @@ with col11:
     if app.button("💼 Enterprise (NIST)"):
         app.session_state.scan_mode = "enterprise"
 
+# # Start custom scan logic if custom scan button selected
 if app.session_state.scan_mode == "custom":
     app.markdown("### [FILE UPLOAD]")
     baseline_file = app.file_uploader("Upload Baseline CSV", type=["csv"])
@@ -105,12 +106,32 @@ if app.session_state.scan_mode == "custom":
             gpo_path = gpo_temp.name
         run_scan(gpo_path, bf_path)
 
+# Start healthcare logic if healthcare button selected
 elif app.session_state.scan_mode == "healthcare":
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
-    bl_file = "/data/baseline_files/healthcare_baseline.csv"
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
             gpo_temp.write(gpo_file.read())
             gpo_path = gpo_temp.name
         run_scan(gpo_path, "../data/baseline_files/healthcare_baseline.csv")
+
+# Start finance logic if finance button selected
+elif app.session_state.scan_mode == "finance":
+    app.markdown("### [FILE UPLOAD]")
+    gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    if gpo_file and app.button("[SCAN]", use_container_width=True):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
+            gpo_temp.write(gpo_file.read())
+            gpo_path = gpo_temp.name
+        run_scan(gpo_path, "../data/baseline_files/finance_baseline.csv")
+
+# Start enterprise logic if enterprise button selected
+elif app.session_state.scan_mode == "enterprise":
+    app.markdown("### [FILE UPLOAD]")
+    gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    if gpo_file and app.button("[SCAN]", use_container_width=True):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
+            gpo_temp.write(gpo_file.read())
+            gpo_path = gpo_temp.name
+        run_scan(gpo_path, "../data/baseline_files/enterprise_baseline.csv")
