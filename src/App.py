@@ -88,23 +88,15 @@ if app.session_state.custom_scan:
                 gpo_temp.write(gpo_file.read())
                 gpo_path = gpo_temp.name
             try:
-                """
-                app.write("Reading GPO file...")
                 cc.get_gpo_settings_and_values(gpo_path)
-
-                app.write("Reading baseline CSV...")
                 cc.get_bl_settings_and_values(bf_path)
-
-                app.write("Running compliance check...")
-                cc.check_gpo_compliance()
-
-                app.write("Compliance check complete.")
+                cc.check_gpo_compliance(ui_mode=True)
                 cc.get_stats()
 
                 app.markdown("### [SCAN RESULTS]")
-                """
                 for rec in cc.output_results:
-                    app.markdown(f"**{rec['setting']}** - {rec['status']}")
+                    status = f":green[{rec['status']}]" if rec['status'] == "COMPLIANT" else f":red[{rec['status']}]"
+                    app.markdown(f"**{rec['setting']}** - {status}")
                     with app.expander("Details"):
                         app.write(f"**Expected:** {rec['expected']}")
                         app.write(f"**Actual:** {rec['actual']}")

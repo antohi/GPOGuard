@@ -51,7 +51,7 @@ class ComplianceScan:
             print(f"{Fore.LIGHTRED_EX}[!] ERROR:{Style.RESET_ALL} Unable to read GPO file. Exception: {e}")
 
     # Checks compliance between baseline and gpo files
-    def check_gpo_compliance(self):
+    def check_gpo_compliance(self, ui_mode = False):
         ai_suggestion = None
         local_results = []
         for setting, actual in self.gpo_settings_and_values.items():
@@ -60,11 +60,11 @@ class ComplianceScan:
                 if self.control_filter_status == True and cid != self.get_control_filter():
                     continue
                 if actual == expected:
-                    status = f"{Fore.GREEN}COMPLIANT{Style.RESET_ALL}"
+                    status = f"{Fore.GREEN}COMPLIANT{Style.RESET_ALL}" if not ui_mode else "COMPLIANT"
                     self.controls_compliant += 1
                     ai_suggestion = None
                 else:
-                    status = f"{Fore.RED}NON-COMPLIANT{Style.RESET_ALL}"
+                    status = f"{Fore.RED}NON-COMPLIANT{Style.RESET_ALL}" if not ui_mode else "NON-COMPLIANT"
                     self.controls_non_compliant += 1
                     try:
                         ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
