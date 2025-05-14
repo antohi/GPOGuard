@@ -2,7 +2,7 @@ import csv
 import logging
 from logging import info
 import json
-from AIRemediation import AIRemediation
+from AIEngine import AIRemediation
 import textwrap
 from colorama import Fore, Style, init
 init(autoreset=True)

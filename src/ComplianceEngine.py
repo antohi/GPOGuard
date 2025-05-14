@@ -1,4 +1,4 @@
-from AIRemediation import *
+from AIEngine import *
 
 class ComplianceEngine:
     def __init__(self, parsed_gpo, parsed_baseline, bl_type):
@@ -13,6 +13,7 @@ class ComplianceEngine:
         self.controls_non_compliant = 0
         self.all_checked = 0
 
+        self.ai_enabled = False
         self.ai = AIRemediation()
 
     def check_compliance(self):
@@ -29,13 +30,9 @@ class ComplianceEngine:
                     ai_suggestion = None
                 else:
                     status = "NON-COMPLIANT"
+                    if self.ai_enabled:
+                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc)
                     self.controls_non_compliant += 1
-                    """
-                    try:
-                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # If not compliant, get AI suggestion
-                    except Exception as e:
-                        ai_suggestion = f"[!] AI ERROR: AI is unavailable at this time."
-                    """
                 record = {
                     "baseline": self.bl_type,
                     "setting": setting,
@@ -49,13 +46,6 @@ class ComplianceEngine:
                     "category": category,
                     "ai_suggestion": ai_suggestion or "N/A"
                 }
-                """
-                # AI logic, going to need to figure out a way to modularize this
-
-                if ai_suggestion is not None: # If AI suggestion exists, print it
-                    print(f"\n{Fore.LIGHTMAGENTA_EX}AI Suggestion:{Style.RESET_ALL} {textwrap.fill(ai_suggestion, width=80)}")
-                print("---")
-                """
                 self.all_checked += 1
                 local_results.append(record)
         return local_results
@@ -71,4 +61,18 @@ class ComplianceEngine:
             self.control_filter = None
             self.control_filter_status = False
 
+    # Prints stats of total controls checked, total compliant, and total non-compliant
+    def get_stats(self) -> list:
+        stats = [self.all_checked, self.controls_compliant, self.controls_non_compliant]
+        return stats
 
+
+    # Resets stats back to 0 for next scan
+    def reset_stats(self):
+        self.all_checked = 0
+        self.controls_compliant = 0
+        self.controls_non_compliant = 0
+
+    # Enables ai
+    def set_ai(self, enabled: bool):
+        self.ai_enabled = enabled
