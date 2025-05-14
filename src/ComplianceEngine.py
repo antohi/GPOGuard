@@ -1,27 +1,26 @@
+import json
+
 from AIEngine import *
 
 class ComplianceEngine:
-    def __init__(self, parsed_gpo, parsed_baseline, bl_type):
-        self.parsed_gpo = parsed_gpo
-        self.parsed_baseline = parsed_baseline
-        self.bl_type = bl_type
-
+    def __init__(self):
         self.control_filter = None
         self.control_filter_status = False
 
         self.controls_compliant = 0
         self.controls_non_compliant = 0
         self.all_checked = 0
+        self.output_results = []
 
         self.ai_enabled = False
         self.ai = AIRemediation()
 
-    def check_compliance(self):
+    def check_compliance(self, parsed_gpo, parsed_baseline, bl_type):
         ai_suggestion = None
         local_results = []
-        for setting, actual in self.parsed_gpo.items():
-            if setting in self.parsed_baseline:
-                expected, framework, cid, desc, severity, category = self.parsed_baseline[setting]
+        for setting, actual in parsed_gpo.items():
+            if setting in parsed_baseline:
+                expected, framework, cid, desc, severity, category = parsed_baseline[setting]
                 if self.control_filter_status == True and cid != self.control_filter:
                     continue
                 if actual == expected:
@@ -34,7 +33,7 @@ class ComplianceEngine:
                         ai_suggestion = self.ai.get_ai_suggestions(cid, desc)
                     self.controls_non_compliant += 1
                 record = {
-                    "baseline": self.bl_type,
+                    "baseline": bl_type,
                     "setting": setting,
                     "expected": expected,
                     "actual": actual,
@@ -46,8 +45,9 @@ class ComplianceEngine:
                     "category": category,
                     "ai_suggestion": ai_suggestion or "N/A"
                 }
-                self.all_checked += 1
                 local_results.append(record)
+                self.all_checked += 1
+        self.output_results.extend(local_results)
         return local_results
 
 
@@ -76,3 +76,29 @@ class ComplianceEngine:
     # Enables ai
     def set_ai(self, enabled: bool):
         self.ai_enabled = enabled
+
+    # Logs compliance check results to csv doc
+    def log_results(self):
+        try:
+            csv_path = "../reports/compliance_report.csv"
+            # CSV
+            with open(csv_path, 'w') as f:
+                f.write(
+                    "Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category,AISuggestion\n")
+                for rec in self.output_results:
+                    f.write(
+                        f"{rec['baseline']},{rec['setting']},"
+                        f"{rec['expected']},{rec['actual']},"
+                        f"{rec['framework']},{rec['control_id']},"
+                        f"\"{rec['description']}\",{rec['severity']},{rec['category']},{rec['ai_suggestion']}\n"
+                    )
+        except Exception as e:
+            return "[!] ERROR: Unable to write CSV compliance report: " + str(e)
+
+        try:
+            # JSON
+            json_path = "../reports/compliance_report.json"
+            with open(json_path, 'w') as f:
+                json.dump(self.output_results, f, indent=2)
+        except Exception as e:
+            return "[!] ERROR: Unable to write JSON compliance report: " + str(e)

@@ -1,8 +1,31 @@
 import os
 import argparse
+import textwrap
+
+from altair import Baseline
+
 from ComplianceScan import ComplianceScan
+from ComplianceEngine import ComplianceEngine
+from GPOParser import *
+from BaselineParser import *
 from colorama import Fore, Style, init
 init(autoreset=True)
+
+def print_results(results, stats):
+    for result in results:
+        if result["status"] == "COMPLIANT":
+            status = f"{Fore.GREEN}{result["status"]}{Style.RESET_ALL}"
+        else:
+            status = f"{Fore.RED}{result["status"]}{Style.RESET_ALL}"
+
+        print(f"{Fore.LIGHTWHITE_EX}{result["setting"]}:{Style.RESET_ALL} {status}"
+              f"\n{Fore.LIGHTWHITE_EX}Severity:{Style.RESET_ALL} {result["severity"]}"
+              f"\n{Fore.LIGHTWHITE_EX}Description:{Style.RESET_ALL} {result["description"]}"
+              f"\n{Fore.LIGHTMAGENTA_EX}AI Suggestion:{Style.RESET_ALL} {textwrap.fill(result["ai_suggestion"], width=80)}")
+        print("---")
+    print(f"{Fore.LIGHTWHITE_EX}\n[Controls Stats]{Style.RESET_ALL}"
+          f"\nChecked: {Fore.WHITE}{stats[0]}{Style.RESET_ALL} | Compliant: {Fore.GREEN}{stats[1]}{Style.RESET_ALL} | "
+          f"Non-Compliant: {Fore.RED}{stats[2]}{Style.RESET_ALL}")
 
 # Lists files in directory
 def list_files(folder):
@@ -24,10 +47,10 @@ def bl_files_selection():
     return input("> ")
 
 # Checks if user would like to use a control filter
-def control_filter(cc):
+def control_filter(ce):
     cf = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
     if control_filter != "":  # If user entered a CF
-        cc.apply_control_filter(cf)
+        ce.apply_control_filter(cf)
 
 # Main menu of app
 def main_menu():
@@ -53,7 +76,7 @@ def post_scan_reset(cc):
     cc.reset_stats()
 
 # Starts UI loop
-def run_ui(cc):
+def run_ui(ce, bp, gp):
     print(f"{Fore.LIGHTBLUE_EX}----------------"
           f"\n===[GPOGuard]==="
           f"\n----------------{Style.RESET_ALL}")
@@ -66,15 +89,17 @@ def run_ui(cc):
                 print(f"\n{Fore.YELLOW}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 bl_file = bl_files_selection()
-                cc.get_bl_settings_and_values(f"../data/baseline_files/{bl_file}")
-                cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-                control_filter(cc)
+                bl_parsed = bp.parse_bl(f"../data/baseline_files/{bl_file}")
+                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                control_filter(ce)
+
                 print(f"\n{Fore.LIGHTYELLOW_EX}[CUSTOM GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                cc.check_gpo_compliance()
-                cc.get_stats()
+                results = ce.check_compliance(gp_parsed, bl_parsed, "Custom")
+                print_results(results, ce.get_stats())
+
                 post_result_choice = post_scan_menu()
-                post_scan_reset(cc)
+                post_scan_reset(ce)
             if post_result_choice == "3":
                 exit = True
         elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
@@ -82,16 +107,17 @@ def run_ui(cc):
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Healthcare GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
-                cc.set_baseline_type("Healthcare")
-                cc.get_bl_settings_and_values(f"../data/baseline_files/healthcare_baseline.csv")
-                cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-                control_filter(cc)
+                bl_parsed = bp.parse_bl(f"../data/baseline_files/healthcare_baseline.csv")
+                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                control_filter(ce)
+
                 print(f"\n{Fore.LIGHTYELLOW_EX}[HEALTHCARE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                cc.check_gpo_compliance()
-                cc.get_stats()
+                results = ce.check_compliance(gp_parsed, bl_parsed, "Healthcare")
+                print_results(results, ce.get_stats())
+
                 post_result_choice = post_scan_menu()
-                post_scan_reset(cc)
+                post_scan_reset(ce)
             if post_result_choice == "3":
                 exit = True
         elif choice == "3":  # Main Menu option #3 Finance GPO Compliance Checker
@@ -99,16 +125,17 @@ def run_ui(cc):
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Finance GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
-                cc.set_baseline_type("Finance")
-                cc.get_bl_settings_and_values(f"../data/baseline_files/finance_baseline.csv")
-                cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-                control_filter(cc)
+                bl_parsed = bp.parse_bl(f"../data/baseline_files/finance_baseline.csv")
+                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                control_filter(ce)
+
                 print(f"\n{Fore.LIGHTYELLOW_EX}[FINANCE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                cc.check_gpo_compliance()
-                cc.get_stats()
+                results = ce.check_compliance(gp_parsed, bl_parsed, "Finance")
+                print_results(results, ce.get_stats())
+
                 post_result_choice = post_scan_menu()
-                post_scan_reset(cc)
+                post_scan_reset(ce)
             if post_result_choice == "3":
                 exit = True
         elif choice == "4":  # Main Menu option #4 Enterprise GPO Compliance Checker
@@ -116,16 +143,17 @@ def run_ui(cc):
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Enterprise GPO Compliance]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
-                cc.set_baseline_type("Enterprise")
-                cc.get_bl_settings_and_values(f"../data/baseline_files/enterprise_baseline.csv")
-                cc.get_gpo_settings_and_values(f"../data/gpo_files/{gpo_file}")
-                control_filter(cc)
+                bl_parsed = bp.parse_bl(f"../data/baseline_files/enterprise_baseline.csv")
+                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                control_filter(ce)
+
                 print(f"\n{Fore.LIGHTYELLOW_EX}[ENTERPRISE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                cc.check_gpo_compliance()
-                cc.get_stats()
+                results = ce.check_compliance(gp_parsed, bl_parsed, "Enterprise")
+                print_results(results, ce.get_stats())
+
                 post_result_choice = post_scan_menu()
-                post_scan_reset(cc)
+                post_scan_reset(ce)
             if post_result_choice == "3":
                 exit = True
         elif choice == "5":
@@ -133,7 +161,7 @@ def run_ui(cc):
         else:  # If menu option is invalid
             print("[!] INVALID MENU OPTION\n")
 
-    cc.log_results()  # Logs results after all scans are finished
+    ce.log_results()  # Logs results after all scans are finished
     pass
 
 def run_args_mode(cc, args):
@@ -159,29 +187,11 @@ def run_args_mode(cc, args):
     cc.log_results()
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="GPOGuard: audit AD GPO exports against a compliance baseline."
-    )
-    parser.add_argument(
-        "-f","--framework",
-        choices=["custom","healthcare","finance","enterprise"],
-        help="Built-in baseline to use"
-    )
-    parser.add_argument(
-        "-b","--baseline",
-        help="Path to a custom baseline CSV (if --framework custom)."
-    )
-    parser.add_argument(
-        "-g","--gpo",
-        help="Path to your GPO .txt file."
-    )
-    args = parser.parse_args()
-
-    cc = ComplianceScan()
-    if args.framework and args.gpo:
-        run_args_mode(cc, args)
-    else:
-        run_ui(cc)
+    ce = ComplianceEngine()
+    ce.set_ai(True)
+    bp = BaselineParser()
+    gp = GPOParser()
+    run_ui(ce, bp, gp)
 
 if __name__ == "__main__":
     main()

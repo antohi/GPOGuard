@@ -1,12 +1,12 @@
 class GPOParser:
-    def __init__(self, gpo_path):
-        self.gpo_path = gpo_path
+
 
     # Parses GPO export and returns dict with settings and values for file
-    def parse_gpo(self) -> dict:
+    @staticmethod
+    def parse_gpo(gpo_path) -> dict:
         parsed_gpo = {}
         try:
-            with open(self.gpo_path, 'r') as f:
+            with open(gpo_path, 'r') as f:
                 for eachLine in f.readlines():
                     if " = " in eachLine:
                         formatted = eachLine.strip().split(" = ")
