@@ -3,11 +3,16 @@ import os
 import tempfile
 
 import streamlit as app
-from ComplianceScan import ComplianceScan
+from BaselineParser import BaselineParser
+from GPOParser import GPOParser
 import io
 import pandas as p
+from ComplianceEngine import ComplianceEngine
 
-cc = ComplianceScan()
+ce = ComplianceEngine()
+ce.set_ai(True)
+bp = BaselineParser()
+gp = GPOParser()
 
 # CSS for some styling changes
 app.set_page_config(page_title="GPOGuard", layout="centered")
@@ -50,15 +55,14 @@ app.markdown("""
 
 
 # Calls proper ComplianceScan class methods to run logic, displays results
-def run_scan(gpo_path, bf_path):
+def run_scan(gpo_path, bf_path, bl_type):
     try:
-        cc.get_gpo_settings_and_values(gpo_path)
-        cc.get_bl_settings_and_values(bf_path)
-        cc.check_gpo_compliance(ui_mode=True)
-        cc.get_stats()
+        gp_parsed = gp.parse_gpo(gpo_path)
+        bp_parsed = bp.parse_bl(bf_path)
+        results = ce.check_compliance(gp_parsed, bp_parsed, bl_type)
 
         app.markdown("### [SCAN RESULTS]")
-        for rec in cc.output_results:
+        for rec in results:
             status = f":green[{rec['status']}]" if rec['status'] == "COMPLIANT" else f":red[{rec['status']}]"
             app.markdown(f"**{rec['setting']}** - {status}")
             with app.expander("More Information"):
@@ -74,7 +78,7 @@ def run_scan(gpo_path, bf_path):
 # Download option to either a csv or json file at the end of scan
 def download_csv_json():
     app.markdown("### [EXPORTS]")
-    df = p.DataFrame(cc.output_results)
+    df = p.DataFrame(ce.output_results)
 
     # CSV Download
     csv_buffer = io.StringIO()
@@ -89,7 +93,7 @@ def download_csv_json():
 
     # JSON Download
     json_buffer = io.StringIO()
-    json.dump(cc.output_results, json_buffer, indent=2)
+    json.dump(ce.output_results, json_buffer, indent=2)
     app.download_button(
         label="⬇️ Export JSON",
         data=json_buffer.getvalue(),
@@ -139,37 +143,34 @@ if app.session_state.scan_mode == "custom":
         with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
             gpo_temp.write(gpo_file.read())
             gpo_path = gpo_temp.name
-        run_scan(gpo_path, bf_path)
+        run_scan(gpo_path, bf_path, "Custom")
 
 # Start healthcare logic if healthcare button selected
 elif app.session_state.scan_mode == "healthcare":
-    cc.set_baseline_type("Healthcare")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
             gpo_temp.write(gpo_file.read())
             gpo_path = gpo_temp.name
-        run_scan(gpo_path, "../data/baseline_files/healthcare_baseline.csv")
+        run_scan(gpo_path, "../data/baseline_files/healthcare_baseline.csv", "Healthcare")
 
 # Start finance logic if finance button selected
 elif app.session_state.scan_mode == "finance":
-    cc.set_baseline_type("Finance")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
             gpo_temp.write(gpo_file.read())
             gpo_path = gpo_temp.name
-        run_scan(gpo_path, "../data/baseline_files/finance_baseline.csv")
+        run_scan(gpo_path, "../data/baseline_files/finance_baseline.csv", "Finance")
 
 # Start enterprise logic if enterprise button selected
 elif app.session_state.scan_mode == "enterprise":
-    cc.set_baseline_type("Enterprise")
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as gpo_temp:
             gpo_temp.write(gpo_file.read())
             gpo_path = gpo_temp.name
-        run_scan(gpo_path, "../data/baseline_files/enterprise_baseline.csv")
+        run_scan(gpo_path, "../data/baseline_files/enterprise_baseline.csv", "Enterprise")

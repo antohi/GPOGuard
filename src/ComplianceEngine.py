@@ -15,13 +15,14 @@ class ComplianceEngine:
         self.ai_enabled = False
         self.ai = AIRemediation()
 
+    # Core function of the project, checks what controls are compliant and non-compliant in comparison to baseline.
     def check_compliance(self, parsed_gpo, parsed_baseline, bl_type):
         ai_suggestion = None
         local_results = []
         for setting, actual in parsed_gpo.items():
             if setting in parsed_baseline:
                 expected, framework, cid, desc, severity, category = parsed_baseline[setting]
-                if self.control_filter_status == True and cid != self.control_filter:
+                if self.control_filter_status == True and cid != self.control_filter: # If Control Filter is on and cid does not match filter, skip
                     continue
                 if actual == expected:
                     status = "COMPLIANT"
@@ -30,9 +31,9 @@ class ComplianceEngine:
                 else:
                     status = "NON-COMPLIANT"
                     if self.ai_enabled:
-                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc)
+                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # Retrieve AI suggestion if non-compliant
                     self.controls_non_compliant += 1
-                record = {
+                record = { # Sets to dictionary for to add to local results
                     "baseline": bl_type,
                     "setting": setting,
                     "expected": expected,
@@ -47,7 +48,7 @@ class ComplianceEngine:
                 }
                 local_results.append(record)
                 self.all_checked += 1
-        self.output_results.extend(local_results)
+        self.output_results.extend(local_results) # Adds to 'global' results for report downloads
         return local_results
 
 
