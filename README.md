@@ -1,6 +1,6 @@
 # 🔐 GPOGuard – Group Policy Compliance Auditor w/ AI
 
-**GPOGuard** is a tool that audits AD GPO exports against compliance baselines like **HIPAA**, **PCI-DSS**, and **NIST 800-53**. It has both **Streamlit GUI** and a fully functional **Colorama CLI**, making it versatile for enterprise, educational, and personal security projects.
+**GPOGuard** is a tool that audits AD GPO exports against compliance baselines like **HIPAA**, **PCI-DSS**, and **NIST 800-53**. It has both **Streamlit GUI** and a fully functional **Colorama CLI**, making it versatile for enterprise, educational, and personal security projects. I started building it using my Active Directory Lab by exporting my lab policy setup infomration to compare against various baselines. 
 
 > Built to automate audit workflows and remediation procedures, with GROQ AI-generated recommendations.
 
@@ -32,6 +32,7 @@ Python CLI tool for auto GPO compliance checks. Supports custom imported baselin
 - Export results to **CSV** and **JSON**
 - Control ID filtering (via CLI)
 - Color-coded terminal UI via **Colorama**
+- Modular design for scaling and new features
 - UI powered by **Streamlit**
 
 ---
@@ -74,5 +75,5 @@ Python CLI tool for auto GPO compliance checks. Supports custom imported baselin
 ```pip install -r requirements.txt```
 
 ## AI Integration 
-The ```AIRemediation.py``` module supports contextual, control-specific fix suggestions. If you configure an API key, GPOGuard can generate automated remediation advice.
+The ```AIEngine.py``` module supports contextual, control-specific fix suggestions. If you configure an API key for GROQ, GPOGuard can generate automated remediation advice.
 
