@@ -2,13 +2,13 @@ import os
 import argparse
 import textwrap
 
-from altair import Baseline
-
-from ComplianceScan import ComplianceScan
 from ComplianceEngine import ComplianceEngine
 from GPOParser import *
 from BaselineParser import *
 from colorama import Fore, Style, init
+from FileUpload import *
+
+
 init(autoreset=True)
 
 def print_results(results, stats):
@@ -76,7 +76,8 @@ def post_scan_reset(cc):
     cc.reset_stats()
 
 # Starts UI loop
-def run_ui(ce, bp, gp):
+def run_ui(ce, bp, gp, gpoe):
+    gpoe.run_powershell("Get-Process | Select-Object -First 3")
     print(f"{Fore.LIGHTBLUE_EX}----------------"
           f"\n===[GPOGuard]==="
           f"\n----------------{Style.RESET_ALL}")
@@ -191,7 +192,8 @@ def main():
     ce.set_ai(True)
     bp = BaselineParser()
     gp = GPOParser()
-    run_ui(ce, bp, gp)
+    gpoe = GPOExtractor()
+    run_ui(ce, bp, gp, gpoe)
 
 if __name__ == "__main__":
     main()
