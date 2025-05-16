@@ -34,7 +34,7 @@ def upload():
 
 
 # Sets up scanning and parsing of the provided GPO and BL file paths
-@app.route('/gpo', methods=['POST'])
+@app.route('/scan', methods=['POST'])
 def scan():
     data = request.get_json()
     gpo_path = data.get("gpo_path")
