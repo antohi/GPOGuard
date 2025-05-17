@@ -1,22 +1,18 @@
 from flask import Flask, request, jsonify
 import os
 
-from src.BaselineParser import BaselineParser
-from src.GPOParser import GPOParser
-from src.ComplianceEngine import ComplianceEngine
-
+from BaselineParser import BaselineParser
+from GPOParser import GPOParser
+from ComplianceEngine import ComplianceEngine
+# http://127.0.0.1:5000
 app = Flask(__name__)
+upload_folder = 'uploads'
+os.makedirs(upload_folder, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = upload_folder
 
 @app.route('/')
 def home():
     return "GPOGuard Flask is running"
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-upload_folder = 'uploads'
-os.makedirs(upload_folder, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = upload_folder
 
 # Sets up gpo and baseline file uploads from user computer
 @app.route('/upload', methods=['POST'])
@@ -44,6 +40,10 @@ def scan():
     gpop = GPOParser.parse_gpo(gpo_path)
     blp = BaselineParser.parse_bl(baseline_path)
     ce.check_compliance(gpop, blp, "Custom")
-
+    print("Parsed GPO:", gpop)
+    print("Parsed Baseline:", blp)
+    print("Results:", ce.output_results)
     return jsonify(ce.output_results)
 
+if __name__ == '__main__':
+    app.run(debug=True)
