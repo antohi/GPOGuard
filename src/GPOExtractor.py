@@ -1,6 +1,9 @@
 import subprocess
 import os
 
+import requests
+
+
 class GPOExtractor:
     def __init__(self, export_path, flask_url):
         self.export_path = export_path
@@ -14,3 +17,15 @@ class GPOExtractor:
             print(f"[+] GPO file exported to {self.export_path}")
         except Exception as e:
             print(f"[!] Failed to export GPO file: {e}")
+
+    # Sends extracted GPO file to flask api
+    def send_gpo_to_flask(self, bl_path):
+        try:
+            files = {
+                "gpo_file": open(self.export_path, 'rb'),
+                'baseline_file': open(bl_path, 'rb')
+            }
+            result = requests.post(f"{self.flask_url}/upload", files=files)
+            return result.json
+        except Exception as e:
+            print(f"[!] Upload error: {e}")
