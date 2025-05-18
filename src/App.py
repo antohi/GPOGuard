@@ -246,27 +246,35 @@ elif app.session_state.scan_mode == "healthcare":
 
 # Start finance logic if finance button selected
 elif app.session_state.scan_mode == "finance":
-    app.session_state.gpo_file = None
+    if "gpo_file" not in app.session_state:
+        app.session_state.gpo_file = None
+    if "bl_file" not in app.session_state:
+        app.session_state.bl_file = None
+    if "custom_input_mode" not in app.session_state:
+        app.session_state.custom_input_mode = None
 
     app.markdown("### [SCAN MODE: FINANCE]")
     col1, col2, col3, col4 = app.columns(4)
     with col2:
         if app.button("Upload GPO File"):
-            app.session_state.gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+            app.session_state.custom_input_mode = "upload"
     with col3:
         if app.button("Auto Extract GPO"):
-            with app.spinner("Running PowerShell..."):
-                extract_status = gpe.extract_gpo()
-                app.info(extract_status)
-                app.session_state.gpo_file = open(gpe.export_path, 'rb')
-                app.session_state.gpo_file.name = "auto_gpo_export.txt"
+            ps_auto_extract_gpo()
+
+    # GPO file upload only if Upload option was selected
+    if app.session_state.custom_input_mode == "upload":
+        gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+        if gpo_file:
+            app.session_state.gpo_file = gpo_file
 
     # SCAN logic
     if app.session_state.gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
                 paths = upload_to_flask(app.session_state.gpo_file,
-                                        upload_default_bl_to_flask("finance_baseline.csv"))
+                                        upload_default_bl_to_flask("finance_baseline.csv")
+                                        )
                 run_scan(paths["gpo_file"], paths["baseline_file"], "Finance")
             except Exception as e:
                 app.error(f"❌ Upload/Scan failed: {e}")
@@ -274,27 +282,35 @@ elif app.session_state.scan_mode == "finance":
 
 # Start enterprise logic if enterprise button selected
 elif app.session_state.scan_mode == "enterprise":
-    app.session_state.gpo_file = None
+    if "gpo_file" not in app.session_state:
+        app.session_state.gpo_file = None
+    if "bl_file" not in app.session_state:
+        app.session_state.bl_file = None
+    if "custom_input_mode" not in app.session_state:
+        app.session_state.custom_input_mode = None
 
     app.markdown("### [SCAN MODE: ENTERPRISE]")
     col1, col2, col3, col4 = app.columns(4)
     with col2:
         if app.button("Upload GPO File"):
-            app.session_state.gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+            app.session_state.custom_input_mode = "upload"
     with col3:
         if app.button("Auto Extract GPO"):
-            with app.spinner("Running PowerShell..."):
-                extract_status = gpe.extract_gpo()
-                app.info(extract_status)
-                app.session_state.gpo_file = open(gpe.export_path, 'rb')
-                app.session_state.gpo_file.name = "auto_gpo_export.txt"
+            ps_auto_extract_gpo()
+
+    # GPO file upload only if Upload option was selected
+    if app.session_state.custom_input_mode == "upload":
+        gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+        if gpo_file:
+            app.session_state.gpo_file = gpo_file
 
     # SCAN logic
     if app.session_state.gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
                 paths = upload_to_flask(app.session_state.gpo_file,
-                                        upload_default_bl_to_flask("enterprise_baseline.csv"))
+                                        upload_default_bl_to_flask("enterprise_baseline.csv")
+                                        )
                 run_scan(paths["gpo_file"], paths["baseline_file"], "Enterprise")
             except Exception as e:
                 app.error(f"❌ Upload/Scan failed: {e}")
