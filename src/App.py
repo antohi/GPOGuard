@@ -9,6 +9,7 @@ from GPOParser import GPOParser
 import io
 import pandas as p
 from ComplianceEngine import ComplianceEngine
+from GPOExtractor import GPOExtractor
 
 ce = ComplianceEngine()
 ce.set_ai(True)
@@ -112,6 +113,15 @@ def upload_default_bl_to_flask(bl_type):
         baseline_file.name = f"{bl_type}"  # Set .name so Flask accepts it
         return baseline_file
 
+def extract_gpo():
+    app.markdown("### [GPO Extraction]")
+    if app.button("Auto Extract", use_container_width=True):
+        with app.spinner("Extracting GPO..."):
+            try:
+                gpe = GPOExtractor()
+            except Exception as e:
+                app.error(f"[!] Unexpected error: {e}")
+
 # Uploads files to flask server
 def upload_to_flask(gpo_file, bl_file):
     gpo_file.seek(0)
@@ -154,10 +164,19 @@ with col11:
 
 # # Start custom scan logic if custom scan button selected
 if app.session_state.scan_mode == "custom":
-    app.markdown("### [FILE UPLOAD]")
+    gpo_file = ''
+    if app.button ("GPO FILE UPLOAD"):
+        app.session_state.scan_mode = "file_upload"
+        app.markdown("### [FILE UPLOAD]")
+        gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+
+    elif app.button ("AUTO GPO EXPORT"):
+        app.session_state.scan_mode = "auto"
+        gpo_file = upload_default_bl_to_flask("gpo")
     baseline_file = app.file_uploader("Upload Baseline CSV", type=["csv"])
-    gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
-    if gpo_file and baseline_file and app.button("[SCAN]", use_container_width=True):
+    extract_gpo()
+    if app.session_state.scan_mode == "custom":
+        if gpo_file and baseline_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
                 paths = upload_to_flask(gpo_file, baseline_file)
@@ -169,6 +188,7 @@ if app.session_state.scan_mode == "custom":
 elif app.session_state.scan_mode == "healthcare":
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    extract_gpo()
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
@@ -183,6 +203,7 @@ elif app.session_state.scan_mode == "healthcare":
 elif app.session_state.scan_mode == "finance":
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    extract_gpo()
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
@@ -197,6 +218,7 @@ elif app.session_state.scan_mode == "finance":
 elif app.session_state.scan_mode == "enterprise":
     app.markdown("### [FILE UPLOAD]")
     gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+    extract_gpo()
     if gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:

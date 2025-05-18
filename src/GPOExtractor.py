@@ -4,30 +4,29 @@ import requests
 
 
 class GPOExtractor:
-    def __init__(self, export_path, flask_url):
-        self.export_path = export_path
-        self.flask_url = flask_url
+    def __init__(self):
+        self.export_path = "gpo_uploads/auto_gpo_export.txt"
+        self.flask_url = "127.0.0.1:5000"
 
     # Uses subprocess to extract GPO report
     def extract_gpo(self):
         try:
             cmd = ["powershell.exe", "-Command", f'Get-GPOReport -All -ReportType Xml -Path "{self.export_path}"']
             subprocess.run(cmd, check=True)
-            print(f"[+] GPO file exported to {self.export_path}")
+            return f"[+] GPO file exported to {self.export_path}"
         except Exception as e:
-            print(f"[!] Failed to export GPO file: {e}")
+            return f"[!] Failed to export GPO file: {e}"
 
     # Sends extracted GPO file to flask api
-    def send_gpo_to_flask(self, bl_path):
+    def send_gpo_to_flask(self):
         try:
             files = {
-                "gpo_file": open(self.export_path, 'rb'),
-                'baseline_file': open(bl_path, 'rb')
+                "gpo_file": open(self.export_path, 'rb')
             }
-            result = requests.post(f"{self.flask_url}/upload", files=files)
-            return result.json()
+            response = requests.post(f"http://{self.flask_url}/gpo_uploads", files=files)
+            return response.json()
         except Exception as e:
-            print(f"[!] Upload error: {e}")
+            return f"[!] Upload error: {e}"
 
     # Runs flask app to display results
     def run_scan(self, gpo_path, baseline_path):
@@ -36,7 +35,6 @@ class GPOExtractor:
             "baseline_path": baseline_path
         })
         if res.status_code == 200:
-            print("[+] Scan Results:")
-            print(res.json())
+           return res.json()
         else:
-            print("[!] Scan failed:", res.text)
+            return f"[!] Error: {res.status_code}"
