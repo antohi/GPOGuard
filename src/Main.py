@@ -1,17 +1,16 @@
 import os
 import argparse
 import textwrap
-
 from ComplianceEngine import ComplianceEngine
 from GPOParser import *
 from BaselineParser import *
 from GPOExtractor import *
 from colorama import Fore, Style, init
-from FlaskApp import *
 
 
 init(autoreset=True)
 
+# Prints results w/ Colorama to display effectively
 def print_results(results, stats):
     for result in results:
         if result["status"] == "COMPLIANT":
@@ -41,7 +40,7 @@ def gpo_file_selection():
     print(list_files("../data/gpo_files"))  # Prints files in directory using list function
     return input("> ") # Returns user chosen gpo file
 
-
+# Sends baseline and gpo files to flask server
 def upload_to_flask(gpo_path, bl_path):
     try:
         with open(gpo_path, 'rb') as gpo_file, open(bl_path, 'rb') as bl_file:
@@ -103,13 +102,13 @@ def run_ui(ce, bp, gp):
             post_result_choice = "1"  # Users can keep scanning for compliance until 2 is entered in post menu
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
-                gpo_file = gpo_file_selection()
-                bl_file = bl_files_selection()
+                gpo_path = gpo_file_selection()
+                bl_path = bl_files_selection()
                 '''
                 bl_parsed = bp.parse_bl(f"../data/baseline_files/{bl_file}")
                 gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
                 '''
-                paths = upload_to_flask(f"../data/gpo_files/{gpo_file}", f"../data/baseline_files/{bl_file}")
+                paths = upload_to_flask(f"../data/gpo_files/{gpo_path}", f"../data/baseline_files/{bl_path}")
                 control_filter(ce)
                 print(f"\n{Fore.LIGHTYELLOW_EX}[CUSTOM GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
@@ -127,16 +126,17 @@ def run_ui(ce, bp, gp):
             post_result_choice = "1"
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Healthcare GPO Compliance]={Style.RESET_ALL}")
-                gpo_file = gpo_file_selection()
-                bl_parsed = bp.parse_bl(f"../data/baseline_files/healthcare_baseline.csv")
-                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                gpo_path = gpo_file_selection()
+                paths = upload_to_flask(f"../data/gpo_files/{gpo_path}", f"../data/baseline_files/healthcare_baseline.csv")
                 control_filter(ce)
 
                 print(f"\n{Fore.LIGHTYELLOW_EX}[HEALTHCARE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                results = ce.check_compliance(gp_parsed, bl_parsed, "Healthcare")
-                print_results(results, ce.get_stats())
+                gpo_parsed = gp.parse_gpo(paths["gpo_file"])
+                bl_parsed = bp.parse_bl(paths["baseline_file"])
+                results = ce.check_compliance(gpo_parsed, bl_parsed, "Healthcare")
 
+                print_results(results, ce.get_stats())
                 post_result_choice = post_scan_menu()
                 post_scan_reset(ce)
             if post_result_choice == "3":
@@ -145,16 +145,17 @@ def run_ui(ce, bp, gp):
             post_result_choice = "1"
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Finance GPO Compliance]={Style.RESET_ALL}")
-                gpo_file = gpo_file_selection()
-                bl_parsed = bp.parse_bl(f"../data/baseline_files/finance_baseline.csv")
-                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                gpo_path = gpo_file_selection()
+                paths = upload_to_flask(f"../data/gpo_files/{gpo_path}", f"../data/baseline_files/finance_baseline.csv")
                 control_filter(ce)
 
                 print(f"\n{Fore.LIGHTYELLOW_EX}[FINANCE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                results = ce.check_compliance(gp_parsed, bl_parsed, "Finance")
-                print_results(results, ce.get_stats())
+                gpo_parsed = gp.parse_gpo(paths["gpo_file"])
+                bl_parsed = bp.parse_bl(paths["baseline_file"])
+                results = ce.check_compliance(gpo_parsed, bl_parsed, "Finance")
 
+                print_results(results, ce.get_stats())
                 post_result_choice = post_scan_menu()
                 post_scan_reset(ce)
             if post_result_choice == "3":
@@ -163,16 +164,17 @@ def run_ui(ce, bp, gp):
             post_result_choice = "1"
             while post_result_choice == "1":
                 print(f"\n{Fore.YELLOW}=[Enterprise GPO Compliance]={Style.RESET_ALL}")
-                gpo_file = gpo_file_selection()
-                bl_parsed = bp.parse_bl(f"../data/baseline_files/enterprise_baseline.csv")
-                gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                gpo_path = gpo_file_selection()
+                paths = upload_to_flask(f"../data/gpo_files/{gpo_path}", f"../data/baseline_files/enterprise_baseline.csv")
                 control_filter(ce)
 
                 print(f"\n{Fore.LIGHTYELLOW_EX}[ENTERPRISE GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                results = ce.check_compliance(gp_parsed, bl_parsed, "Enterprise")
-                print_results(results, ce.get_stats())
+                gpo_parsed = gp.parse_gpo(paths["gpo_file"])
+                bl_parsed = bp.parse_bl(paths["baseline_file"])
+                results = ce.check_compliance(gpo_parsed, bl_parsed, "Enterprise")
 
+                print_results(results, ce.get_stats())
                 post_result_choice = post_scan_menu()
                 post_scan_reset(ce)
             if post_result_choice == "3":
