@@ -51,8 +51,6 @@ class ComplianceEngine:
         self.output_results.extend(local_results) # Adds to 'global' results for report downloads
         return local_results
 
-
-
     # Applies control filter, if no control id used, filter is cleared.
     def apply_control_filter(self, control_id=None):
         if control_id:

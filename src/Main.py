@@ -49,7 +49,7 @@ def bl_files_selection():
 # Checks if user would like to use a control filter
 def control_filter(ce):
     cf = input("\nControl ID Filter [Ex. \"IA-5\" | Leave blank if none]: ")
-    if control_filter != "":  # If user entered a CF
+    if cf != "":  # If user entered a CF
         ce.apply_control_filter(cf)
 
 # Main menu of app
@@ -76,8 +76,7 @@ def post_scan_reset(cc):
     cc.reset_stats()
 
 # Starts UI loop
-def run_ui(ce, bp, gp, gpoe):
-    gpoe.run_powershell("Get-Process | Select-Object -First 3")
+def run_ui(ce, bp, gp):
     print(f"{Fore.LIGHTBLUE_EX}----------------"
           f"\n===[GPOGuard]==="
           f"\n----------------{Style.RESET_ALL}")
@@ -192,8 +191,7 @@ def main():
     ce.set_ai(True)
     bp = BaselineParser()
     gp = GPOParser()
-    gpoe = GPOExtractor()
-    run_ui(ce, bp, gp, gpoe)
+    run_ui(ce, bp, gp)
 
 if __name__ == "__main__":
     main()
