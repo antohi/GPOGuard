@@ -1,6 +1,5 @@
 import subprocess
 import os
-
 import requests
 
 
@@ -26,6 +25,18 @@ class GPOExtractor:
                 'baseline_file': open(bl_path, 'rb')
             }
             result = requests.post(f"{self.flask_url}/upload", files=files)
-            return result.json
+            return result.json()
         except Exception as e:
             print(f"[!] Upload error: {e}")
+
+    # Runs flask app to display results
+    def run_scan(self, gpo_path, baseline_path):
+        res = requests.post(f"{self.flask_url}/scan", json={
+            "gpo_path": gpo_path,
+            "baseline_path": baseline_path
+        })
+        if res.status_code == 200:
+            print("[+] Scan Results:")
+            print(res.json())
+        else:
+            print("[!] Scan failed:", res.text)

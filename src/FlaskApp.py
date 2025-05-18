@@ -26,7 +26,10 @@ def upload():
     gpo_file.save(gpo_path)
     baseline_file.save(baseline_path)
 
-    return jsonify({"gpo_path": gpo_path, "baseline_path": baseline_path})
+    return jsonify({
+        "gpo_file": os.path.abspath(gpo_path),
+        "baseline_file": os.path.abspath(baseline_path)
+    })
 
 
 # Sets up scanning and parsing of the provided GPO and BL file paths
@@ -40,9 +43,6 @@ def scan():
     gpop = GPOParser.parse_gpo(gpo_path)
     blp = BaselineParser.parse_bl(baseline_path)
     ce.check_compliance(gpop, blp, "Custom")
-    print("Parsed GPO:", gpop)
-    print("Parsed Baseline:", blp)
-    print("Results:", ce.output_results)
     return jsonify(ce.output_results)
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ from ComplianceEngine import ComplianceEngine
 from GPOParser import *
 from BaselineParser import *
 from colorama import Fore, Style, init
-from FileUpload import *
+from FlaskApp import *
 
 
 init(autoreset=True)
