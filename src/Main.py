@@ -5,6 +5,7 @@ import textwrap
 from ComplianceEngine import ComplianceEngine
 from GPOParser import *
 from BaselineParser import *
+from GPOExtractor import *
 from colorama import Fore, Style, init
 from FlaskApp import *
 
@@ -34,10 +35,25 @@ def list_files(folder):
 # Asks user to select a file to use for their GPO scan
 def gpo_file_selection():
     print(f"{Fore.LIGHTWHITE_EX}[FILE SELECTION]{Style.RESET_ALL}")
+    print("\nPlease choose an option:")
     print("Please select a GPO file to check for compliance (/data directory)"
           "\n\nFiles in /data/gpo_files directory:")
     print(list_files("../data/gpo_files"))  # Prints files in directory using list function
     return input("> ") # Returns user chosen gpo file
+
+
+def upload_to_flask(gpo_path, bl_path):
+    try:
+        with open(gpo_path, 'rb') as gpo_file, open(bl_path, 'rb') as bl_file:
+            files = {
+                "gpo_file": (os.path.basename(gpo_path), gpo_file, "text/plain"),
+                "baseline_file": (os.path.basename(bl_path), bl_file, "text/csv")
+            }
+            response = requests.post("http://127.0.0.1:5000/upload", files=files)
+            return response.json()
+    except Exception as e:
+        print(f"[!] Upload failed: {e}")
+        return None
 
 # Asks user to select a baseline file to scan GPO file against
 def bl_files_selection():
@@ -89,19 +105,24 @@ def run_ui(ce, bp, gp):
                 print(f"\n{Fore.YELLOW}=[Custom GPO Compliance Checker]={Style.RESET_ALL}")
                 gpo_file = gpo_file_selection()
                 bl_file = bl_files_selection()
+                '''
                 bl_parsed = bp.parse_bl(f"../data/baseline_files/{bl_file}")
                 gp_parsed = gp.parse_gpo(f"../data/gpo_files/{gpo_file}")
+                '''
+                paths = upload_to_flask(f"../data/gpo_files/{gpo_file}", f"../data/baseline_files/{bl_file}")
                 control_filter(ce)
-
                 print(f"\n{Fore.LIGHTYELLOW_EX}[CUSTOM GPO COMPLIANCE RESULTS]{Style.RESET_ALL}")
                 print("---")
-                results = ce.check_compliance(gp_parsed, bl_parsed, "Custom")
-                print_results(results, ce.get_stats())
+                gpo_parsed = gp.parse_gpo(paths["gpo_file"])
+                bl_parsed = bp.parse_bl(paths["baseline_file"])
+                results = ce.check_compliance(gpo_parsed, bl_parsed, "Custom")
 
+                print_results(results, ce.get_stats())
                 post_result_choice = post_scan_menu()
                 post_scan_reset(ce)
             if post_result_choice == "3":
                 exit = True
+
         elif choice == "2":  # Main Menu option #2 Healthcare GPO Compliance Checker
             post_result_choice = "1"
             while post_result_choice == "1":
@@ -163,28 +184,6 @@ def run_ui(ce, bp, gp):
 
     ce.log_results()  # Logs results after all scans are finished
     pass
-
-def run_args_mode(cc, args):
-    # Pick baseline_path
-    if args.framework == "custom":
-        if not args.baseline:
-            raise SystemExit("[!] ERROR: --baseline is required with --framework custom")
-        baseline_path = args.baseline
-        cc.set_baseline_type("Custom")
-    else:
-        baseline_map = {
-            "healthcare": "data/baseline_files/healthcare_baseline.csv",
-            "finance":    "data/baseline_files/finance_baseline.csv",
-            "enterprise": "data/baseline_files/enterprise_baseline.csv"
-        }
-        baseline_path = baseline_map[args.framework]
-        cc.set_baseline_type(args.framework.capitalize())
-
-    # Load args & run
-    cc.get_bl_settings_and_values(baseline_path)
-    cc.get_gpo_settings_and_values(args.gpo)
-    cc.check_gpo_compliance()
-    cc.log_results()
 
 def main():
     ce = ComplianceEngine()
