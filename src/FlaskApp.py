@@ -10,9 +10,13 @@ app = Flask(__name__)
 
 gpo_upload_folder = 'gpo_uploads'
 bl_upload_folder = 'bl_uploads'
+uploads = "uploads"
 os.makedirs(gpo_upload_folder, exist_ok=True)
+os.makedirs(bl_upload_folder, exist_ok=True)
+os.makedirs(uploads, exist_ok=True)
 app.config['GPO_UPLOAD_FOLDER'] = gpo_upload_folder
 app.config['BL_UPLOAD_FOLDER'] = bl_upload_folder
+app.config['UPLOADS'] = uploads
 
 
 @app.route('/')
@@ -40,6 +44,23 @@ def bl_upload():
     return jsonify({
         "baseline_file": os.path.abspath(baseline_path)
     })
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    gpo_file = request.files['gpo_file']
+    baseline_file = request.files['baseline_file']
+
+    gpo_path = os.path.join(app.config['GPO_UPLOAD_FOLDER'], gpo_file.filename)
+    bl_path = os.path.join(app.config['BL_UPLOAD_FOLDER'], baseline_file.filename)
+
+    gpo_file.save(gpo_path)
+    baseline_file.save(bl_path)
+
+    return jsonify({
+        "gpo_file": os.path.abspath(gpo_path),
+        "baseline_file": os.path.abspath(bl_path)
+    })
+
 
 # Sets up scanning and parsing of the provided GPO and BL file paths
 @app.route('/scan', methods=['POST'])
