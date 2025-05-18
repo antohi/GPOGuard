@@ -112,6 +112,7 @@ def upload_default_bl_to_flask(bl_type):
         baseline_bytes = f.read()
         baseline_file = io.BytesIO(baseline_bytes)
         baseline_file.name = f"{bl_type}"  # Set .name so Flask accepts it
+
         return baseline_file
 
 # Uploads files to flask server
@@ -125,6 +126,18 @@ def upload_to_flask(gpo_file, bl_file):
 
     response = requests.post("http://127.0.0.1:5000/upload", files=files)
     return response.json()
+
+def ps_auto_extract_gpo():
+    with app.spinner("Running PowerShell..."):
+        extract_status = gpe.extract_gpo()
+        app.info(extract_status)
+        try:
+            file = open(gpe.export_path, 'rb')
+            file.name = "auto_gpo_export.txt"  # Needed for Streamlit's internal file handling
+            app.session_state.gpo_file = file
+            app.session_state.custom_input_mode = "auto"
+        except FileNotFoundError:
+            app.error("❌ Auto-extracted file not found. Make sure extraction succeeded.")
 
 # [GPO Guard] Title
 app.markdown(
@@ -174,16 +187,7 @@ if app.session_state.scan_mode == "custom":
 
     with col3:
         if app.button("Auto Extract GPO"):
-            with app.spinner("Running PowerShell..."):
-                extract_status = gpe.extract_gpo()
-                app.info(extract_status)
-                try:
-                    file = open(gpe.export_path, 'rb')
-                    file.name = "auto_gpo_export.txt"  # Needed for Streamlit's internal file handling
-                    app.session_state.gpo_file = file
-                    app.session_state.custom_input_mode = "auto"
-                except FileNotFoundError:
-                    app.error("❌ Auto-extracted file not found. Make sure extraction succeeded.")
+            ps_auto_extract_gpo()
 
     # GPO file upload only if Upload option was selected
     if app.session_state.custom_input_mode == "upload":
@@ -207,26 +211,35 @@ if app.session_state.scan_mode == "custom":
 
 # Start healthcare logic if healthcare button selected
 elif app.session_state.scan_mode == "healthcare":
-    app.session_state.gpo_file = None
+    if "gpo_file" not in app.session_state:
+        app.session_state.gpo_file = None
+    if "bl_file" not in app.session_state:
+        app.session_state.bl_file = None
+    if "custom_input_mode" not in app.session_state:
+        app.session_state.custom_input_mode = None
 
     app.markdown("### [SCAN MODE: HEALTHCARE]")
     col1, col2, col3, col4 = app.columns(4)
     with col2:
         if app.button("Upload GPO File"):
-            app.session_state.gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+            app.session_state.custom_input_mode = "upload"
     with col3:
         if app.button("Auto Extract GPO"):
-            with app.spinner("Running PowerShell..."):
-                extract_status = gpe.extract_gpo()
-                app.info(extract_status)
-                app.session_state.gpo_file = open(gpe.export_path, 'rb')
-                app.session_state.gpo_file.name = "auto_gpo_export.txt"
+            ps_auto_extract_gpo()
+
+    # GPO file upload only if Upload option was selected
+    if app.session_state.custom_input_mode == "upload":
+        gpo_file = app.file_uploader("Upload GPO .txt Export", type=["txt"])
+        if gpo_file:
+            app.session_state.gpo_file = gpo_file
 
     # SCAN logic
     if app.session_state.gpo_file and app.button("[SCAN]", use_container_width=True):
         with app.spinner("Uploading to Flask and scanning..."):
             try:
-                paths = upload_to_flask(app.session_state.gpo_file, upload_default_bl_to_flask("healthcare_baseline.csv"))
+                paths = upload_to_flask(app.session_state.gpo_file,
+                                        upload_default_bl_to_flask("healthcare_baseline.csv")
+                                        )
                 run_scan(paths["gpo_file"], paths["baseline_file"], "Healthcare")
             except Exception as e:
                 app.error(f"❌ Upload/Scan failed: {e}")
