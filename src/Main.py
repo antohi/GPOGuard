@@ -19,6 +19,8 @@ def print_results(results, stats):
             status = f"{Fore.RED}{result["status"]}{Style.RESET_ALL}"
 
         print(f"{Fore.LIGHTWHITE_EX}{result["setting"]}:{Style.RESET_ALL} {status}"
+              f"\n{Fore.LIGHTWHITE_EX}Expected:{Style.RESET_ALL} {result['expected']}"
+              f"\n{Fore.LIGHTWHITE_EX}Actual:{Style.RESET_ALL} {result['actual']}"
               f"\n{Fore.LIGHTWHITE_EX}Severity:{Style.RESET_ALL} {result["severity"]}"
               f"\n{Fore.LIGHTWHITE_EX}Description:{Style.RESET_ALL} {result["description"]}"
               f"\n{Fore.LIGHTMAGENTA_EX}AI Suggestion:{Style.RESET_ALL} {textwrap.fill(result["ai_suggestion"], width=80)}")
