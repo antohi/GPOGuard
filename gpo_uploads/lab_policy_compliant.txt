@@ -1,0 +1,224 @@
+[Unicode]
+Unicode=yes
+[System Access]
+MinimumPasswordAge = 1
+MaximumPasswordAge = 42
+MinimumPasswordLength = 12
+PasswordComplexity = 1
+PasswordHistorySize = 24
+LockoutBadCount = 5
+RequireLogonToChangePassword = 0
+ForceLogoffWhenHourExpire = 0
+NewAdministratorName = "dc1admin"
+NewGuestName = "Guest"
+ClearTextPassword = 0
+LSAAnonymousNameLookup = 0
+EnableAdminAccount = 1
+EnableGuestAccount = 0
+[Event Audit]
+AuditSystemEvents = 0
+AuditLogonEvents = 3
+AuditObjectAccess = 0
+AuditPrivilegeUse = 0
+AuditPolicyChange = 0
+AuditAccountManage = 0
+AuditProcessTracking = 0
+AuditDSAccess = 0
+AuditAccountLogon = 0
+[Kerberos Policy]
+MaxTicketAge = 10
+MaxRenewAge = 7
+MaxServiceAge = 600
+MaxClockSkew = 5
+TicketValidateClient = 1
+[Registry Values]
+MACHINE\Software\Microsoft\Windows
+NT\CurrentVersion\Setup\RecoveryConsole\SecurityLevel=4,0
+MACHINE\Software\Microsoft\Windows
+NT\CurrentVersion\Setup\RecoveryConsole\SetCommand=4,0
+MACHINE\Software\Microsoft\Windows
+NT\CurrentVersion\Winlogon\CachedLogonsCount=1,
+"10"
+MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ForceUnlockLogon=4,0
+MACHINE\Software\Microsoft\Windows
+NT\CurrentVersion\Winlogon\PasswordExpiryWarning=4,5
+MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,
+"0"
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehavi
+orAdmin=4,5
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehavi
+orUser=4,3
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD=4,0
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserN
+ame=4,0
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetectio
+n=4,1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA=4,1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableSecureUIAPaths
+=4,1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableUIADesktopTog
+gle=4,0
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableVirtualization=4,
+1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption=1,
+"
+"
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText=7,
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDeskt
+op=4,1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ScForceOption=4,0
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogo
+n=4,0
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\UndockWithoutLogon=
+4,1
+MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSig
+natures=4,0
+MACHINE\Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers\AuthenticodeEnabled=4,
+0
+MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\Enabled=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\FullPrivilegeAuditing=3,0
+MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse=4,1
+MACHINE\System\CurrentControlSet\Control\Lsa\MSV1
+_
+0\NTLMMinClientSec=4,536870912
+MACHINE\System\CurrentControlSet\Control\Lsa\MSV1
+_
+0\NTLMMinServerSec=4,536870912
+MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash=4,1
+MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous=4,0
+MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM=4,1
+MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print
+Services\Servers\AddPrinterDrivers=4,1
+MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\M
+achine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\
+Server Applications,Software\Microsoft\Windows NT\CurrentVersion
+MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machin
+e=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventl
+og,Software\Microsoft\OLAP Server,Software\Microsoft\Windows
+NT\CurrentVersion\Print,Software\Microsoft\Windows
+NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentC
+ontrolSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal
+Server\UserConfig,System\CurrentControlSet\Control\Terminal
+Server\DefaultUserConfiguration,Software\Microsoft\Windows
+NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog
+MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel\ObCaseInsensitive=4,1
+MACHINE\System\CurrentControlSet\Control\Session Manager\Memory
+Management\ClearPageFileAtShutdown=4,0
+MACHINE\System\CurrentControlSet\Control\Session Manager\ProtectionMode=4,1
+MACHINE\System\CurrentControlSet\Control\Session Manager\SubSystems\optional=7,
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\AutoDisconnect=4,1
+5
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff
+=4,1
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySigna
+ture=4,1
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes=7,
+,netlogon,samr,lsarpc
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySign
+ature=4,1
+MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAcc
+ess=4,1
+MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTex
+tPassword=4,0
+MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecurity
+Signature=4,1
+MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\RequireSecurit
+ySignature=4,0
+MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientIntegrity=4,1
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange=
+4,0
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge=4
+,30
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal=4,1
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey=4,1
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel=4,1
+MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel=4,1
+MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity=4,1
+[Privilege Rights]
+SeNetworkLogonRight = *S-1-1-0,
+*S-1-5-11,
+*S-1-5-32-544,
+*S-1-5-32-554,
+*S-1-5-9
+SeMachineAccountPrivilege = *S-1-5-11
+SeBackupPrivilege = *S-1-5-32-544,
+*S-1-5-32-549,
+*S-1-5-32-551
+SeChangeNotifyPrivilege =
+*S-1-1-0,
+*S-1-5-11,
+*S-1-5-19,
+*S-1-5-20,
+*S-1-5-32-544,
+*S-1-5-32-554
+SeSystemtimePrivilege = *S-1-5-19,
+*S-1-5-32-544,
+*S-1-5-32-549
+SeCreatePagefilePrivilege = *S-1-5-32-544
+SeDebugPrivilege = *S-1-5-32-544
+SeRemoteShutdownPrivilege = *S-1-5-32-544,
+*S-1-5-32-549
+SeAuditPrivilege = *S-1-5-19,
+*S-1-5-20
+SeIncreaseQuotaPrivilege = *S-1-5-19,
+*S-1-5-20,
+*S-1-5-32-544
+SeIncreaseBasePriorityPrivilege = *S-1-5-32-544,
+*S-1-5-90-0
+SeLoadDriverPrivilege = *S-1-5-32-544,
+*S-1-5-32-550
+SeBatchLogonRight = *S-1-5-32-544,
+*S-1-5-32-551,
+*S-1-5-32-559
+SeServiceLogonRight = *S-1-5-80-0
+SeInteractiveLogonRight =
+*S-1-5-32-544,
+*S-1-5-32-548,
+*S-1-5-32-549,
+*S-1-5-32-550,
+*S-1-5-32-551,
+*S-1-5-9
+SeSecurityPrivilege = *S-1-5-32-544
+SeSystemEnvironmentPrivilege = *S-1-5-32-544
+SeProfileSingleProcessPrivilege = *S-1-5-32-544
+SeSystemProfilePrivilege =
+*S-1-5-32-544,
+*S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420
+SeAssignPrimaryTokenPrivilege = *S-1-5-19,
+*S-1-5-20
+SeRestorePrivilege = *S-1-5-32-544,
+*S-1-5-32-549,
+*S-1-5-32-551
+SeShutdownPrivilege = *S-1-5-32-544,
+*S-1-5-32-549,
+*S-1-5-32-550,
+*S-1-5-32-551
+SeTakeOwnershipPrivilege = *S-1-5-32-544
+SeUndockPrivilege = *S-1-5-32-544
+SeEnableDelegationPrivilege = *S-1-5-32-544
+SeManageVolumePrivilege = *S-1-5-32-544
+SeRemoteInteractiveLogonRight = Fin-Employees,
+*S-1-5-32-544,
+*S-1-5-32-555
+SeImpersonatePrivilege = *S-1-5-19,
+*S-1-5-20,
+*S-1-5-32-544,
+*S-1-5-6
+SeCreateGlobalPrivilege = *S-1-5-19,
+*S-1-5-20,
+*S-1-5-32-544,
+*S-1-5-6
+SeIncreaseWorkingSetPrivilege = *S-1-5-32-545
+SeTimeZonePrivilege = *S-1-5-19,
+*S-1-5-32-544,
+*S-1-5-32-549
+SeCreateSymbolicLinkPrivilege = *S-1-5-32-544
+SeDelegateSessionUserImpersonatePrivilege = *S-1-5-32-544
+[Version]
+signature="$CHICAGO$"
+Revision=1

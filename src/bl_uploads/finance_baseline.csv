@@ -1,0 +1,8 @@
+SettingName,ExpectedValue,Framework,ControlID,Description,Severity,Category
+MinimumPasswordLength,12,PCI-DSS 8.2.3,IA-5,Enforce minimum password length to 12 characters,High,Access Control
+AccountLockoutDuration,15,PCI-DSS 8.1.6,AC-7,Lock account for 15 minutes after failed attempts,High,Access Control
+AuditLogonEvents,3,NIST800-53,AU-2,Log both successful and failed logon attempts,Medium,Audit
+EnableFirewall,1,NIST800-53,SC-7,Ensure Windows Firewall is enabled,Medium,Boundary Protection
+SessionTimeout,10,PCI-DSS 8.1.8,AC-12,Automatically log out inactive sessions after 10 min,Medium,Access Control
+EncryptFS,Enabled,NIST800-53,SC-13,Encrypt file systems containing sensitive data,High,Encryption
+AutoUpdate,Enabled,NIST800-53,SI-2,Automatically install OS security updates,Low,Maintenance

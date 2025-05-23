@@ -1,0 +1,8 @@
+SettingName,ExpectedValue,Framework,ControlID,Description,Severity,Category
+MinimumPasswordLength,12,NIST800-53,IA-5,Enforce minimum password length to 12 characters,High,Access Control
+LockoutBadCount,5,NIST800-53,AC-7,Lock account after 5 failed login attempts,High,Access Control
+AuditLogonEvents,3,NIST800-53,AU-2,Log both successful and failed logon attempts,High,Audit
+EnforcePasswordHistory,24,NIST800-53,IA-5,Remember last 24 passwords to prevent reuse,Medium,Access Control
+AccountLockoutDuration,15,NIST800-53,AC-7,Lock account for 15 minutes after bad attempts,Medium,Access Control
+EnableFirewall,1,NIST800-53,SC-7,Ensure host firewall is enabled,Medium,Boundary Protection
+AutoUpdate,Enabled,NIST800-53,SI-2,Automatically install OS security updates,Low,Maintenance

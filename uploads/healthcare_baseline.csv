@@ -1,0 +1,6 @@
+SettingName,ExpectedValue,Framework,ControlID,Description,Severity,Category
+AuditLogonEvents,3,HIPAA 164.312(b),AU-2,Log all authentication attempts,High,Audit
+EnableFirewall,1,NIST800-53,SC-7,Ensure host firewall is enabled,High,Boundary Protection
+AutoUpdate,Enabled,NIST800-53,SI-2,Automate OS security updates,Medium,Maintenance
+EncryptFS,Enabled,HIPAA 164.312(a),SC-13,Encrypt file systems containing PHI,High,Encryption
+IdleSessionTimeout,15,NIST800-53,AC-12,Auto-logout after inactivity (minutes),Medium,Access Control

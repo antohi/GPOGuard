@@ -19,35 +19,41 @@ class ComplianceEngine:
     def check_compliance(self, parsed_gpo, parsed_baseline, bl_type):
         ai_suggestion = None
         local_results = []
-        for setting, actual in parsed_gpo.items():
-            if setting in parsed_baseline:
-                expected, framework, cid, desc, severity, category = parsed_baseline[setting]
-                if self.control_filter_status == True and cid != self.control_filter: # If Control Filter is on and cid does not match filter, skip
-                    continue
-                if actual == expected:
-                    status = "COMPLIANT"
-                    self.controls_compliant += 1
-                    ai_suggestion = None
-                else:
-                    status = "NON-COMPLIANT"
-                    if self.ai_enabled:
-                        ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # Retrieve AI suggestion if non-compliant
-                    self.controls_non_compliant += 1
-                record = { # Sets to dictionary for to add to local results
-                    "baseline": bl_type,
-                    "setting": setting,
-                    "expected": expected,
-                    "actual": actual,
-                    "status": status,
-                    "framework": framework,
-                    "control_id": cid,
-                    "description": desc,
-                    "severity": severity,
-                    "category": category,
-                    "ai_suggestion": ai_suggestion or "N/A"
-                }
-                local_results.append(record)
-                self.all_checked += 1
+
+        for setting, baseline_entry in parsed_baseline.items():
+            expected, framework, cid, desc, severity, category = baseline_entry
+            actual = parsed_gpo.get(setting) if parsed_gpo.get(setting) else "MISSING"
+
+            if self.control_filter_status and cid != self.control_filter: # If Control Filter is on and cid does not match filter, skip
+                continue
+
+            if actual == expected:
+                status = "COMPLIANT"
+                self.controls_compliant += 1
+                ai_suggestion = None
+            else:
+                status = "NON-COMPLIANT"
+                if self.ai_enabled:
+                    ai_suggestion = self.ai.get_ai_suggestions(cid, desc) # Retrieve AI suggestion if non-compliant
+                self.controls_non_compliant += 1
+
+            record = { # Creates record dictionary to add to local results
+                "baseline": bl_type,
+                "setting": setting,
+                "expected": expected,
+                "actual": actual,
+                "status": status,
+                "framework": framework,
+                "control_id": cid,
+                "description": desc,
+                "severity": severity,
+                "category": category,
+                "ai_suggestion": ai_suggestion or "N/A"
+            }
+
+            local_results.append(record)
+            self.all_checked += 1
+
         self.output_results.extend(local_results) # Adds to 'global' results for report downloads
         return local_results
 
