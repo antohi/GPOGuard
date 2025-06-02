@@ -5,12 +5,12 @@ import requests
 
 class GPOExtractor:
     def __init__(self):
-        self.export_path = "gpo_uploads/auto_gpo_export.txt"
+        self.export_path = "GPOGuard/gpo_uploads/auto_gpo_export.txt"
         self.flask_url = "127.0.0.1:5000"
 
     # Uses subprocess to extract GPO report
     def extract_gpo(self):
-        try:
+        try: #### CHANGE TO SECEDIT
             cmd = ["powershell.exe", "-Command", f'Get-GPOReport -All -ReportType Xml -Path "{self.export_path}"']
             subprocess.run(cmd, check=True)
             return f"[+] GPO file exported to {self.export_path}"

@@ -1,3 +1,4 @@
+import csv
 import json
 
 from AIEngine import *
@@ -85,25 +86,28 @@ class ComplianceEngine:
     # Logs compliance check results to csv doc
     def log_results(self):
         try:
+            #CSV
             csv_path = "../reports/compliance_report.csv"
-            # CSV
-            with open(csv_path, 'w') as f:
-                f.write(
-                    "Baseline,SettingName,ExpectedValue,ActualValue,Framework,ControlID,Description,Severity,Category,AISuggestion\n")
+            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    "Baseline", "SettingName", "ExpectedValue", "ActualValue",
+                    "Framework", "ControlID", "Description", "Severity",
+                    "Category", "AISuggestion"
+                ])
                 for rec in self.output_results:
-                    f.write(
-                        f"{rec['baseline']},{rec['setting']},"
-                        f"{rec['expected']},{rec['actual']},"
-                        f"{rec['framework']},{rec['control_id']},"
-                        f"\"{rec['description']}\",{rec['severity']},{rec['category']},{rec['ai_suggestion']}\n"
-                    )
+                    writer.writerow([
+                        rec['baseline'], rec['setting'], rec['expected'],
+                        rec['actual'], rec['framework'], rec['control_id'],
+                        rec['description'], rec['severity'], rec['category'],
+                        rec['ai_suggestion']
+                    ])
         except Exception as e:
             return "[!] ERROR: Unable to write CSV compliance report: " + str(e)
-
         try:
             # JSON
             json_path = "../reports/compliance_report.json"
-            with open(json_path, 'w') as f:
+            with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(self.output_results, f, indent=2)
         except Exception as e:
             return "[!] ERROR: Unable to write JSON compliance report: " + str(e)

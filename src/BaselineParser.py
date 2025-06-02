@@ -1,6 +1,4 @@
 import csv
-
-
 class BaselineParser:
 
     # Parses baseline file and returns it as a dict

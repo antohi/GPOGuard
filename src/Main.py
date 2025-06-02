@@ -1,5 +1,3 @@
-import os
-import argparse
 import textwrap
 from ComplianceEngine import ComplianceEngine
 from GPOParser import *

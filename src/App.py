@@ -1,7 +1,4 @@
 import json
-import os
-import tempfile
-
 import requests
 import streamlit as app
 from BaselineParser import BaselineParser
