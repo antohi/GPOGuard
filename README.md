@@ -34,6 +34,8 @@ Python CLI tool for auto GPO compliance checks. Supports custom imported baselin
 - Color-coded terminal UI via **Colorama**
 - Modular design for scaling and new features
 - UI powered by **Streamlit**
+- Flask API Backend layer for GUI and external automation                              |
+
 
 ---
 
